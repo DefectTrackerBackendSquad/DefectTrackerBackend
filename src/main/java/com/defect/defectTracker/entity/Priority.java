@@ -1,0 +1,21 @@
+package com.defect.defectTracker.entity;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import lombok.Data;
+
+import java.awt.*;
+
+@Data
+@Entity
+public class Priority {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private String priority;
+
+    private Color color;
+}
