@@ -1,5 +1,6 @@
 package com.defect.defectTracker.dto;
 
+<<<<<<< HEAD
 
 
 import java.sql.Time;
@@ -20,4 +21,7 @@ public class ReleaseTestCaseDto {
     private Long userId;
     private Long testCaseId;
     private Long releasesId;
+=======
+public class ReleaseTestCaseDto {
+>>>>>>> 9ee051a3817610d70c794a7e500c13dfc5bc9904
 }

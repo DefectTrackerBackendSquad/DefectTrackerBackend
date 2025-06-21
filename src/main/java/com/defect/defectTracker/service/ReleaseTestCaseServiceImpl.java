@@ -1,5 +1,6 @@
 package com.defect.defectTracker.service;
 
+<<<<<<< HEAD
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -117,4 +118,7 @@ public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
 //        }
 //        return releaseTestCaseRepo.save(rtc);
 //    }
+=======
+public class ReleaseTestCaseServiceImpl {
+>>>>>>> 9ee051a3817610d70c794a7e500c13dfc5bc9904
 }
