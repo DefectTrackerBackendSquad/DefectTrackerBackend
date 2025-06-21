@@ -12,6 +12,8 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface TestCaseRepo extends JpaRepository<TestCase, String> {
+    boolean existsByTestCaseId(String testCaseId);
+
     @Query("SELECT MAX(t.id) FROM TestCase t")
     Optional<Long> findMaxId();
 }
