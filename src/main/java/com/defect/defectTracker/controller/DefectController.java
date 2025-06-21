@@ -18,12 +18,12 @@ public class DefectController {
     private final DefectService defectService;  // Injected service layer dependency
 
     @PutMapping
-    public ResponseEntity<SimpleResponse> updateDefect(@RequestBody DefectDto defectDTO) {
+    public ResponseEntity<StandardResponse> updateDefect(@RequestBody DefectDto defectDTO) {
         // Validate that the defect ID is provided
         if (defectDTO.getDefectId() == null || defectDTO.getDefectId().isEmpty()) {
             return ResponseEntity
                     .badRequest()
-                    .body(new SimpleResponse(
+                    .body(new StandardResponse(
                             "error",
                             "4001",
                             "Defect ID is required."
@@ -35,7 +35,7 @@ public class DefectController {
         if (existing == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new SimpleResponse(
+                    .body(new StandardResponse(
                             "error",
                             "4002",
                             "Defect not found."
@@ -52,25 +52,23 @@ public class DefectController {
         if (updated == null) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new SimpleResponse(
+                    .body(new StandardResponse(
                             "error",
                             "5001",
-                            "Update failed."
-                    ));
+                            "Update failed."));
         }
 
         // Return successful response
         return ResponseEntity
-                .ok(new SimpleResponse(
+                .ok(new StandardResponse(
                         "success",
                         "2001",
-                        "Updated successfully."
-                ));
+                        "Updated successfully."));
     }
 
     // DTO for uniform response, using Lombok to generate getters, setters & constructors
     @Data @NoArgsConstructor @AllArgsConstructor
-    private static class SimpleResponse {
+    private static class StandardResponse {
         private String status;
         private String statusCode;
         private String message;

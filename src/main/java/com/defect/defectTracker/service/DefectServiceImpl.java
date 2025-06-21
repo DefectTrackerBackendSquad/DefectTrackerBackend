@@ -17,29 +17,14 @@ public class DefectServiceImpl implements DefectService {
     public DefectServiceImpl(DefectRepo defectRepository) {
         this.defectRepository = defectRepository;
     }
-
-    @Override
-    public Defect createDefect(Defect defect) {
-        return defectRepository.save(defect);
-    }
-
     @Override
     public Defect getDefectByDefectId(String defectId) {
         return defectRepository.findByDefectId(defectId);
     }
-
-    @Override
-    public List<Defect> getAllDefects() {
-        return defectRepository.findAll();
-    }
-
     @Override
     public Defect updateDefect(Defect defect) {
         return defectRepository.save(defect);
     }
 
-    @Override
-    public void deleteDefect(String defectId) {
-        defectRepository.deleteByDefectId(defectId);
-    }
+
 }

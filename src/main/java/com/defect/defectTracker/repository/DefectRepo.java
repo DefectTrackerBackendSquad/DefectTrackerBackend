@@ -10,5 +10,5 @@ import java.util.List;
 public interface DefectRepo extends JpaRepository<Defect, Long> {
     Defect findByDefectId(String defectId);
     List<Defect> findAll();
-    void deleteByDefectId(String defectId);
+  
 }
