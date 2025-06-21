@@ -14,6 +14,5 @@ public class Severity {
     private Long id;
 
     private String severityName;
-    // Store color as hex string instead of java.awt.Color
     private String severityColor;
 }

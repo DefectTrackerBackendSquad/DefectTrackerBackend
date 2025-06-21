@@ -18,14 +18,12 @@ public class Defect {
     private String description;
     private int reOpenCount;
 
-    // If you want to persist attachments, use byte[] or String (file path or base64). Otherwise, keep as @Transient.
     @Transient
-    private String attachment; // Use String for file path or base64, or change to byte[] if needed
+    private String attachment;
 
     private String steps;
     private LocalDateTime createdDate;
 
-    // Lombok @Data will generate getter/setter for createdDate
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_test_case_id")
@@ -39,7 +37,7 @@ public class Defect {
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne//(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "severity_id")
     private Severity severity;
 
