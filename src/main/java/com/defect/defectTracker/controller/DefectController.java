@@ -1,6 +1,7 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.DefectDto;
+import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/defect")
 @RequiredArgsConstructor
 public class DefectController {
-    private final DefectService defectService;
+
+    @Autowired
+    private DefectService defectService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
+        Defect defect = defectService.getDefectByDefectId(id);
+        if (defect != null) {
+            return ResponseEntity.ok(
+                    new StandardResponse("Success", "Retrieved successfully", defect, 200)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new StandardResponse("Error", "Defect not found", null, 404));
+    }
 
     @GetMapping("/filter")
     public ResponseEntity<Object> getDefectsByFlexibleFilters(
@@ -27,13 +42,15 @@ public class DefectController {
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                new java.util.HashMap<String, Object>() {{
-                    put("status", "Failure");
-                    put("message", "Bad Request");
-                    put("statusCode", 4000);
-                }}
+                    new java.util.HashMap<String, Object>() {{
+                        put("status", "Failure");
+                        put("message", "Bad Request");
+                        put("statusCode", 4000);
+                    }}
             );
         }
     }
-
 }
+
+
+
