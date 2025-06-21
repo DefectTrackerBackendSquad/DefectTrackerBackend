@@ -2,6 +2,7 @@ package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.ReleasesDTO;
 import com.defect.defectTracker.entity.Releases;
+import com.defect.defectTracker.service.ReleasesService;
 import com.defect.defectTracker.service.ReleaseService;
 import com.defect.defectTracker.utils.StandardResponse;
 import org.slf4j.Logger;
@@ -9,11 +10,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -23,6 +26,7 @@ public class ReleasesController {
     private static final Logger logger = LoggerFactory.getLogger(ReleasesController.class);
 
     @Autowired
+    private ReleasesService releasesService;
     private ReleaseService releasesService;
 
     @PostMapping
@@ -32,6 +36,18 @@ public class ReleasesController {
 
             Releases releases = new Releases();
             releases.setReleaseName((String) request.get("releaseName"));
+    // 🔍 Search endpoint
+    @GetMapping("/search")
+    public List<Releases> searchReleases(
+            @RequestParam(required = false) String releaseName,
+            @RequestParam(required = false) String releaseType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date releaseDate,
+            @RequestParam(required = false) Long projectId
+    ) {
+//        System.out.println("Searching with name: " + releaseName);
+//        System.out.println("Type: " + releaseType);
+//        System.out.println("Date: " + releaseDate);
+//        System.out.println("Project ID: " + projectId);
 
             Object dateObj = request.get("releaseDate");
             if (dateObj != null) {
@@ -67,4 +83,14 @@ public class ReleasesController {
         }
     }
 
+
+
+
+
+
+
+}
+
+        return releasesService.searchReleases(releaseName, releaseType, releaseDate, projectId);
+    }
 }
