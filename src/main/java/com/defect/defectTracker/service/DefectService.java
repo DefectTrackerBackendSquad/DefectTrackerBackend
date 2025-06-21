@@ -1,7 +1,18 @@
 package com.defect.defectTracker.service;
 
+import com.defect.defectTracker.entity.Defect;
+import com.defect.defectTracker.repository.DefectRepo;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
-import com.defect.defectTracker.dto.DefectDto;
+import java.util.List;
 
-public interface DefectService {
+@Service
+@RequiredArgsConstructor
+public class DefectService {
+    private final DefectRepo defectRepository;
+
+    public List<Defect> getDefectsByProjectId(String projectId) {
+        return defectRepository.findByProject_ProjectId(projectId);
+    }
 }
