@@ -30,8 +30,8 @@ import java.io.IOException;
 public class TestCaseController {
 
     @Autowired
-    private final TestCaseImportService importService;
-    private final TestCaseService testCaseService;
+    private  TestCaseImportService importService;
+    private  TestCaseService testCaseService;
 
 
     @PostMapping("/import")
