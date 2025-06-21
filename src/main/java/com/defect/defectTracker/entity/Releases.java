@@ -16,11 +16,12 @@ public class Releases {
 
     private String releaseName;
 
-    private Date releasedate;
+    private Date releaseDate;
 
     private String releaseType;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
 }
