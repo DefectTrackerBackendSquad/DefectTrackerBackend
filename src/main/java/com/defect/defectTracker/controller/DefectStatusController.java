@@ -1,15 +1,11 @@
-package com.example.defectTracker.controller;
+package com.defect.defectTracker.controller;
 
-import com.example.defectTracker.Dto.DefectStatusRequest;
-import com.example.defectTracker.Dto.DefectStatusRequest;
-import com.example.defectTracker.Dto.DefectStatusResponse;
-import com.example.defectTracker.service.DefectStatusService;
+import com.defect.defectTracker.dto.DefectStatusDTO;
+import com.defect.defectTracker.service.DefectStatusService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/defectStatus")
@@ -19,17 +15,17 @@ public class DefectStatusController {
     private DefectStatusService defectStatusService;
 
     @PostMapping
-    public ResponseEntity<DefectStatusResponse> addDefectStatus(@RequestBody DefectStatusRequest defectStatusRequest) {
-        DefectStatusResponse response = defectStatusService.createDefectStatus(defectStatusRequest);
+    public ResponseEntity<DefectStatusDTO> addDefectStatus(@RequestBody DefectStatusDTO dto) {
+        DefectStatusDTO response = defectStatusService.createDefectStatus(dto);
 
-        // Map status codes to HTTP statuses
         switch (response.getStatusCode()) {
             case "2001":
-                return ResponseEntity.status(201).body(response); // 201 Created
+                return ResponseEntity.status(HttpStatus.CREATED).body(response);
             case "4000":
-                return ResponseEntity.badRequest().body(response); // 400 Bad Request
+                return ResponseEntity.badRequest().body(response);
             default:
-                return ResponseEntity.internalServerError().body(response); // 500 Internal Server Error
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
         }
     }
+
 }

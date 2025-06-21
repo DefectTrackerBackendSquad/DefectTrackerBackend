@@ -1,8 +1,7 @@
-package com.example.defectTracker.service;
+package com.defect.defectTracker.service;
 
-import com.example.defectTracker.Dto.DefectStatusRequest;
-import com.example.defectTracker.Dto.DefectStatusResponse;
+import com.defect.defectTracker.dto.DefectStatusDTO;
 
 public interface DefectStatusService {
-    DefectStatusResponse createDefectStatus(DefectStatusRequest defectStatusRequest);
+    DefectStatusDTO createDefectStatus(DefectStatusDTO defectStatusDTO);
 }

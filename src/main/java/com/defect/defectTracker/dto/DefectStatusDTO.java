@@ -1,15 +1,17 @@
 package com.defect.defectTracker.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class DefectStatusDTO {
-    private String defectStatus; // input field (e.g., "Open", "Closed")
-
-    // These are for response purposes
-    private String status;       // e.g., "success" or "error"
-    private String statusCode;   // e.g., "2001", "4000"
-    private String message;      // human-readable message
+    private String status;
+    private String statusCode;
+    private String message;
+    private String defectStatus; // include the input field
 }
