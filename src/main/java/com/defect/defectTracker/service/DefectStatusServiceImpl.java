@@ -18,28 +18,39 @@ public class DefectStatusServiceImpl implements DefectStatusService {
     public DefectStatusDto updateDefectStatus(Long id, DefectStatusDto dto) {
         String newName = dto.getDefectStatusName();
 
-        // 1. Validate input
-        if (newName == null || newName.trim().isEmpty()) {
-            throw new IllegalArgumentException("Defect status name cannot be null or empty.");
+
+
+
+            if (newName == null || newName.trim().isEmpty()) {
+                throw new IllegalArgumentException("Defect status name cannot be null or empty.");
+            }
+
+            if (newName.trim().matches("\\d+")) {
+                throw new IllegalArgumentException("Defect status name cannot contain only numbers.");
+            }
+
+            if (!newName.trim().matches("^[a-zA-Z ]+$")) {
+                throw new IllegalArgumentException("Defect status name must only contain letters and spaces (no symbols).");
+            }
+
+
+            DefectStatus existing = repository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("DefectStatus with ID " + id + " not found."));
+
+
+            Optional<DefectStatus> duplicate = repository.findByDefectStatusNameIgnoreCase(newName.trim());
+            if (duplicate.isPresent() && !duplicate.get().getId().equals(id)) {
+                throw new IllegalArgumentException("Defect status name already exists.");
+            }
+
+
+            existing.setDefectStatusName(newName.trim());
+            DefectStatus updated = repository.save(existing);
+
+            return new DefectStatusDto(updated.getId(), updated.getDefectStatusName());
         }
 
-        if (newName.trim().matches("\\d+")) {
-            throw new IllegalArgumentException("Defect status name cannot contain only numbers.");
-        }
 
-        // 2. Check for existence
-        DefectStatus existing = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("DefectStatus with ID " + id + " not found."));
 
-        // 3. Check for duplicate name (case-insensitive)
-        Optional<DefectStatus> duplicate = repository.findByDefectStatusNameIgnoreCase(newName.trim());
-        if (duplicate.isPresent() && !duplicate.get().getId().equals(id)) {
-            throw new IllegalArgumentException("Defect status name already exists.");
-        }
-
-        // 4. Update and save
-        existing.setDefectStatusName(newName.trim());
-        DefectStatus updated = repository.save(existing);
-        return new DefectStatusDto(updated.getId(), updated.getDefectStatusName());
     }
-}
+
