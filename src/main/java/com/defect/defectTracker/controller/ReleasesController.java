@@ -3,7 +3,6 @@ package com.defect.defectTracker.controller;
 import com.defect.defectTracker.dto.ReleasesDTO;
 import com.defect.defectTracker.entity.Releases;
 import com.defect.defectTracker.service.ReleasesService;
-import com.defect.defectTracker.service.ReleaseService;
 import com.defect.defectTracker.utils.StandardResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,11 +22,10 @@ import java.util.Map;
 @RequestMapping("/api/v1/releases")
 public class ReleasesController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReleasesController.class);
+    Logger logger = LoggerFactory.getLogger("ReleaseController.class");
 
     @Autowired
     private ReleasesService releasesService;
-    private ReleaseService releasesService;
 
     @PostMapping
     public ResponseEntity<StandardResponse> createRelease(@RequestBody Map<String, Object> request) {
@@ -36,18 +34,7 @@ public class ReleasesController {
 
             Releases releases = new Releases();
             releases.setReleaseName((String) request.get("releaseName"));
-    // 🔍 Search endpoint
-    @GetMapping("/search")
-    public List<Releases> searchReleases(
-            @RequestParam(required = false) String releaseName,
-            @RequestParam(required = false) String releaseType,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date releaseDate,
-            @RequestParam(required = false) Long projectId
-    ) {
-//        System.out.println("Searching with name: " + releaseName);
-//        System.out.println("Type: " + releaseType);
-//        System.out.println("Date: " + releaseDate);
-//        System.out.println("Project ID: " + projectId);
+
 
             Object dateObj = request.get("releaseDate");
             if (dateObj != null) {
@@ -75,7 +62,7 @@ public class ReleasesController {
             );
 
         } catch (Exception e) {
-            logger.error("Error creating release: {}", e.getMessage());
+            logger.info("Error creating release: {}", e.getMessage());
             return new ResponseEntity<>(
                     new StandardResponse("error", "Failed to import", null, 500),
                     HttpStatus.INTERNAL_SERVER_ERROR
@@ -84,13 +71,40 @@ public class ReleasesController {
     }
 
 
+    @GetMapping("/search")
+    public ResponseEntity<StandardResponse> searchReleases(
+            @RequestParam(required = false) String releaseId,  // Added this parameter
+            @RequestParam(required = false) String releaseName,
+            @RequestParam(required = false) String releaseType,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date releaseDate,
+            @RequestParam(required = false) Long projectId
+    ) {
+        List<ReleasesDTO> results = releasesService.searchReleases(
+                releaseId,
+                releaseName,
+                releaseType,
+                releaseDate,
+                projectId
+        );
 
-
-
-
-
-}
-
-        return releasesService.searchReleases(releaseName, releaseType, releaseDate, projectId);
+        return ResponseEntity.ok(
+                new StandardResponse("success", "Releases fetched", results, 200)
+        );
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }
+
+
