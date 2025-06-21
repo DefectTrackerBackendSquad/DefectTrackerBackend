@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor // Lombok generates constructor
-public class DefectServiceImpl implements DefectService {
+// Lombok generates constructor
+public abstract class DefectServiceImpl extends DefectService {
 
+    public DefectServiceImpl(DefectRepo defectRepository) {
+        super(defectRepository);
+    }
 }
