@@ -2,6 +2,7 @@ package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.service.ReleaseTestCaseService;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
@@ -13,8 +14,8 @@ import com.defect.defectTracker.utils.ErrorResponse;
 @RestController
 @RequestMapping("/api/v1/release-testcase")
 public class ReleaseTestCaseController {
-
-    private final ReleaseTestCaseService releaseTestCaseService;
+@Autowired
+    private ReleaseTestCaseService releaseTestCaseService;
 
     public ReleaseTestCaseController(ReleaseTestCaseService releaseTestCaseService) {
         this.releaseTestCaseService = releaseTestCaseService;
@@ -44,7 +45,7 @@ public class ReleaseTestCaseController {
         catch (Exception e) {
             // Handle other exceptions and return a generic error response
             ErrorResponse errorResponse = new ErrorResponse(
-                    "error",
+                    "failure",
                     "10004",  // Custom error code
                     "An unexpected error occurred: " + e.getMessage()
             );
