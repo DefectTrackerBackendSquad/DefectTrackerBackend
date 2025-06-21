@@ -6,16 +6,15 @@ import lombok.Data;
 
 
 @Data
-
 public class ReleaseTestCaseDto {
-    private Long releaseTestCaseId;
-    private String testCaseId;
+    private String releaseTestCaseId;
     private String testCaseDescription;
     private String testSteps;
     private Date testDate;
     private Time testTime;
     private String testCaseStatus;
-
     private String releaseId;
+    private String testCaseId;
+
 
 }
