@@ -16,7 +16,7 @@ public class Defect {
 
     private String description;
     private int reOpenCount;
-    private Media attachment;
+    private String attachment;
     private String steps;
 
 
