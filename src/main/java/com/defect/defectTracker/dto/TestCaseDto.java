@@ -2,7 +2,6 @@ package com.defect.defectTracker.dto;
 
 
 import lombok.*;
-import org.hibernate.event.spi.PreInsertEvent;
 
 @Data
 @AllArgsConstructor
