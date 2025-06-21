@@ -1,14 +1,14 @@
 package com.defect.defectTracker.repository;
 
 import com.defect.defectTracker.entity.Defect;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
-
+@Transactional
 @Repository
 public interface DefectRepo extends JpaRepository<Defect, Long> {
     @Query("SELECT d FROM Defect d " +
@@ -17,4 +17,5 @@ public interface DefectRepo extends JpaRepository<Defect, Long> {
             "LEFT JOIN FETCH d.defectStatus " +
             "WHERE d.assignedBy.id = :userId")
     List<Defect> findByAssignedById(@Param("userId") Long userId);
+    Defect findByDefectId(String id);
 }
