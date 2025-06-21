@@ -7,10 +7,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.defect.defectTracker.service.TestCaseImportService;
+import com.defect.defectTracker.service.TestCaseService;
+import com.defect.defectTracker.utils.StandardResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/testcases")
+@RequiredArgsConstructor
 public class TestCaseController {
 
     @Autowired
@@ -30,7 +37,7 @@ public class TestCaseController {
             }
 
             return ResponseEntity.ok()
-                    .body(new ApiResponse("success", 2000, "Retrieved Successfully", testCases));
+                    .body(new ApiResponse("success", 2000, "Retrieved Successfully"));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ApiResponse("failure", 4000, "Retrieved failed"));
@@ -51,20 +58,18 @@ public class TestCaseController {
             this.message = message;
         }
 
-        public ApiResponse(String status, int statusCode, String message, List<TestCaseDto> result) {
-            this.status = status;
-            this.statusCode = statusCode;
-            this.message = message;
-            this.result = result;
-        }
+        @Autowired
+        private TestCaseImportService importService;
 
-        public String getStatus() { return status; }
-        public void setStatus(String status) { this.status = status; }
-        public int getStatusCode() { return statusCode; }
-        public void setStatusCode(int statusCode) { this.statusCode = statusCode; }
-        public String getMessage() { return message; }
-        public void setMessage(String message) { this.message = message; }
-        public List<TestCaseDto> getResult() { return result; }
-        public void setResult(List<TestCaseDto> result) { this.result = result; }
+        @PostMapping("/import")
+        public ResponseEntity<String> importTestCases(@RequestParam("file") MultipartFile file) {
+            try {
+                importService.importTestCasesFromCsv(file);
+                return ResponseEntity.ok("Success");
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body("Failed to import: " + e.getMessage());
+            }
+        }
     }
 }

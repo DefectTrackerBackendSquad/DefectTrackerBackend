@@ -10,6 +10,8 @@ public class TestCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(unique = true)
     private String testCaseId;
     private String description;
     private String steps;
@@ -18,7 +20,7 @@ public class TestCase {
     @JoinColumn(name = "sub_module_id")
     private SubModule subModule;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "module_id")
     private Modules module;
 
@@ -33,4 +35,7 @@ public class TestCase {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type type;
+
+    public void setModules(Modules moduleId) {
+    }
 }
