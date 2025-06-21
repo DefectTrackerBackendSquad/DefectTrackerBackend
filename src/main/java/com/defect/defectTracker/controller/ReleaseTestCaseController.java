@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/release-testcases")
+@RequestMapping("/api/releaseTestcases")
 public class ReleaseTestCaseController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class ReleaseTestCaseController {
     }
     @GetMapping("/{releaseId}")
     public ResponseEntity<List<ReleaseTestCaseDto>> getTestCasesByReleaseId(@PathVariable String releaseId) {
-        List<ReleaseTestCaseDto> testCases = releaseService.getTestCasesByReleaseId(releaseId);
+        List<ReleaseTestCaseDto> testCases = releaseTestCaseService.getTestCasesByReleaseId(releaseId);
         return ResponseEntity.ok(testCases);
     }
 }
