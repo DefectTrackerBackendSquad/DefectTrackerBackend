@@ -6,8 +6,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-import java.awt.*;
-
 @Data
 @Entity
 public class Severity {
@@ -16,5 +14,6 @@ public class Severity {
     private Long id;
 
     private String severityName;
-    private Color  severityColor;
+    // Store color as hex string instead of java.awt.Color
+    private String severityColor;
 }
