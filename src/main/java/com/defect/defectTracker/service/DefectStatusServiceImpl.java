@@ -21,12 +21,12 @@ public class DefectStatusServiceImpl implements DefectStatusService {
         if (defectStatusOptional.isPresent()) {
             try {
                 defectStatusRepo.deleteById(defectStatusId);
-                return new StandardResponse("success", "Deleted successfully.", "2001");
+                return new StandardResponse("success", "Deleted successfully.", null, 2001);
             } catch (Exception e) {
-                return new StandardResponse("failure", "Delete Failed.", "4001");
+                return new StandardResponse("failure", "Delete Failed.", null, 4001);
             }
         } else {
-            return new StandardResponse("failure", "Id not exist.", "10009");
+            return new StandardResponse("failure", "Id not exist.", null, 10009);
         }
     }
 }
