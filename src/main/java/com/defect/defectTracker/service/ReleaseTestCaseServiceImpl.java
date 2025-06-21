@@ -1,51 +1,69 @@
-package com.defect.defectTracker.service.impl;
+package com.defect.defectTracker.service;
+import com.defect.defectTracker.entity.Releases;
+import com.defect.defectTracker.entity.TestCase;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.defect.defectTracker.dto.ReleaseTestCaseDto;
 import com.defect.defectTracker.entity.ReleaseTestCase;
-import com.defect.defectTracker.entity.Releases;
-import com.defect.defectTracker.entity.TestCase;
-import com.defect.defectTracker.repository.ReleaseTestCaseRepo;
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.repository.ReleasesRepo;
-import com.defect.defectTracker.repository.TestCaseRepo;
-import com.defect.defectTracker.service.ReleaseTestCaseService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.defect.defectTracker.repository.ReleaseTestCaseRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
 
     @Autowired
     private ReleaseTestCaseRepo releaseTestCaseRepo;
 
     @Autowired
-    private TestCaseRepo testCaseRepo;
-
-    @Autowired
-    private ReleasesRepo releasesRepo;
+    private ReleasesRepo releaseRepo;
 
     @Override
-    public ReleaseTestCaseDto createReleaseTestCase(ReleaseTestCaseDto dto) {
-        ReleaseTestCase releaseTestCase = new ReleaseTestCase();
-        releaseTestCase.setReleaseTestCaseId(dto.getReleaseTestCaseId());
-        releaseTestCase.setTestDate(dto.getTestDate());
-        releaseTestCase.setTestTime(dto.getTestTime());
-        releaseTestCase.setTestCaseStatus(dto.getTestCaseStatus());
+    public List<ReleaseTestCaseDto> getTestCasesByReleaseId(String releaseId) {
+        if (!releaseRepo.existsByReleaseId(releaseId)) {
+            throw new ResourceNotFoundException("Release ID " + releaseId + " not found");
+        }
 
-        TestCase testCase = testCaseRepo.findById(dto.getTestCaseId()).orElse(null);
-        Releases releases = releasesRepo.findById(dto.getReleaseId()).orElse(null);
+        List<ReleaseTestCase> releaseTestCases = releaseTestCaseRepo.findByReleasesReleaseId(releaseId);
 
-        releaseTestCase.setTestCase(testCase);
-        releaseTestCase.setReleases(releases);
+        @Override
+        public ReleaseTestCaseDto createReleaseTestCase(ReleaseTestCaseDto dto) {
+            ReleaseTestCase releaseTestCase = new ReleaseTestCase();
+            releaseTestCase.setReleaseTestCaseId(dto.getReleaseTestCaseId());
+            releaseTestCase.setTestDate(dto.getTestDate());
+            releaseTestCase.setTestTime(dto.getTestTime());
+            releaseTestCase.setTestCaseStatus(dto.getTestCaseStatus());
 
-        ReleaseTestCase saved = releaseTestCaseRepo.save(releaseTestCase);
-        dto.setId(saved.getId());
+            TestCase testCase = testCaseRepo.findById(dto.getTestCaseId()).orElse(null);
+            Releases releases = releasesRepo.findById(dto.getReleaseId()).orElse(null);
 
-        return dto;
+            releaseTestCase.setTestCase(testCase);
+            releaseTestCase.setReleases(releases);
+
+            ReleaseTestCase saved = releaseTestCaseRepo.save(releaseTestCase);
+            dto.setId(saved.getId());
+
+            return dto;
+        }
+
+        return releaseTestCases.stream().map(rtc -> {
+            ReleaseTestCaseDto dto = new ReleaseTestCaseDto();
+            dto.setReleaseTestCaseId(rtc.getId());
+            dto.setTestCaseId(rtc.getTestCase().getTestCaseId());
+            dto.setTestCaseDescription(rtc.getTestCase().getDescription());
+            dto.setTestSteps(rtc.getTestCase().getSteps());
+            dto.setTestDate(rtc.getTestDate());
+            dto.setTestTime(rtc.getTestTime());
+            dto.setTestCaseStatus(rtc.getTestCaseStatus());
+
+            dto.setReleaseId(rtc.getReleases().getReleaseId());
+            return dto;
+        }).collect(Collectors.toList());
     }
-
-
 }
