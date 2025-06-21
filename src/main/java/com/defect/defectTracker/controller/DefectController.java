@@ -1,6 +1,4 @@
 package com.defect.defectTracker.controller;
-
-import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;

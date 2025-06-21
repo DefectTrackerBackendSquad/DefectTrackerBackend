@@ -1,12 +1,14 @@
 package com.defect.defectTracker.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.defect.defectTracker.entity.*;
 import com.defect.defectTracker.entity.Defect;
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 public class DefectDto {
 
     private Long id;
