@@ -20,7 +20,6 @@ public class Defect {
 
     @Transient
     private String attachment;
-
     private String steps;
     private LocalDateTime createdDate;
 

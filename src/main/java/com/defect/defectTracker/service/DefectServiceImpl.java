@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.data.repository.query.Param;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor // Lombok generates constructor
@@ -61,6 +64,13 @@ public class DefectServiceImpl implements DefectService {
     }
     @Autowired
     private DefectRepo defectRepo;
+
+
+    @Override
+    public List<Defect> getDefectsByAssignee(Long userId) {
+        return defectRepo.findByAssignedById(userId);
+    }
+
 
     @Override
     public Defect getDefectByDefectId(String id) {

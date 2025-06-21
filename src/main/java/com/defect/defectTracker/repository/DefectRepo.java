@@ -10,6 +10,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.Optional;
 
+import java.util.List;
+import java.util.Optional;
 @Transactional
 @Repository
 public interface DefectRepo extends JpaRepository<Defect, Long> {
@@ -22,6 +24,13 @@ public interface DefectRepo extends JpaRepository<Defect, Long> {
                                     @Param("projectId") Long projectId);
 
 
+
+    @Query("SELECT d FROM Defect d " +
+            "LEFT JOIN FETCH d.assignedTo " +
+            "LEFT JOIN FETCH d.project " +
+            "LEFT JOIN FETCH d.defectStatus " +
+            "WHERE d.assignedBy.id = :userId")
+    List<Defect> findByAssignedById(@Param("userId") Long userId);
     Defect findByDefectId(String id);
 }
 
