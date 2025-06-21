@@ -22,6 +22,7 @@ import java.util.Optional;
 public class DefectServiceImpl implements DefectService {
     Logger logger = LoggerFactory.getLogger(DefectServiceImpl.class);
 
+    @Autowired
     private DefectRepo defectRepository;
 
     @Override
