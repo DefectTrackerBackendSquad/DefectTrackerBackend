@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TestCaseRepo extends JpaRepository<TestCase, String> {
+    boolean existsByTestCaseId(String testCaseId);
+
 }
