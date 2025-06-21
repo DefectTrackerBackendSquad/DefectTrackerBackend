@@ -1,5 +1,6 @@
 package com.defect.defectTracker.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,7 @@ import com.defect.defectTracker.service.ReleaseTestCaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
@@ -18,7 +20,8 @@ import java.util.List;
 
 
 public class ReleaseTestCaseController {
-    private final ReleaseTestCaseService releaseService;
+    @Autowired
+    private  ReleaseTestCaseService releaseService;
 
 
     @GetMapping("/{releaseId}")

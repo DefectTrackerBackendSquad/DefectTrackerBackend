@@ -1,4 +1,5 @@
 package com.defect.defectTracker.service;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.defect.defectTracker.dto.ReleaseTestCaseDto;
 import com.defect.defectTracker.entity.ReleaseTestCase;
@@ -15,8 +16,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
 
-    private final ReleaseTestCaseRepo releaseTestCaseRepo;
-    private final ReleasesRepo releaseRepo;
+    @Autowired
+    private ReleaseTestCaseRepo releaseTestCaseRepo;
+
+    @Autowired
+    private ReleasesRepo releaseRepo;
 
     @Override
     public List<ReleaseTestCaseDto> getTestCasesByReleaseId(String releaseId) {
