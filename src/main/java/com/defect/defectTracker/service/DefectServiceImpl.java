@@ -1,8 +1,8 @@
 // DefectServiceImpl.java
-package com.example.defectTracker.service;
+package com.defect.defectTracker.service;
 
-import com.example.defectTracker.entity.Defect;
-import com.example.defectTracker.repository.DefectRepository;
+import com.defect.defectTracker.entity.Defect;
+import com.defect.defectTracker.repository.DefectRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,9 +12,9 @@ import java.util.List;
 @Transactional
 public class DefectServiceImpl implements DefectService {
 
-    private final DefectRepository defectRepository;
+    private final DefectRepo defectRepository;
 
-    public DefectServiceImpl(DefectRepository defectRepository) {
+    public DefectServiceImpl(DefectRepo defectRepository) {
         this.defectRepository = defectRepository;
     }
 

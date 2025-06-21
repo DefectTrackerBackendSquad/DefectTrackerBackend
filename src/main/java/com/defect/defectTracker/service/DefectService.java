@@ -1,7 +1,8 @@
 // DefectService.java
-package com.example.defectTracker.service;
+package com.defect.defectTracker.service;
 
-import com.example.defectTracker.entity.Defect;
+import com.defect.defectTracker.entity.Defect;
+
 import java.util.List;
 
 public interface DefectService {

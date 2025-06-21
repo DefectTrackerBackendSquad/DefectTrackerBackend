@@ -3,7 +3,7 @@ package com.defect.defectTracker.dto;
 import lombok.Data;
 
 @Data
-public class DefectDTO {
+public class DefectDto {
     private String message; // used for response message
     private String defectId;
     private String description;
