@@ -1,6 +1,7 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.DefectDto;
+import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,4 +15,18 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class DefectController {
 
+    @Autowired
+    private final DefectService defectService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
+        Defect defect = defectService.getDefectByDefectId(id);
+        if (defect != null) {
+            return ResponseEntity.ok(
+                    new StandardResponse("Success", "Retrieved successfully", defect, 200)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new StandardResponse("Error", "Defect not found", null, 404));
+    }
 }
