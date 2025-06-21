@@ -1,11 +1,9 @@
 package com.defect.defectTracker.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Data;
 
 import javax.print.attribute.standard.Media;
-import java.awt.*;
 
 @Data
 @Entity
@@ -13,11 +11,15 @@ public class Defect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String defectId;
+
     private String description;
     private int reOpenCount;
-    private Media attachment;
+    private String attachment;
     private String steps;
+
+
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_test_case_id")
@@ -50,7 +52,5 @@ public class Defect {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type defectType;
-
-
 
 }
