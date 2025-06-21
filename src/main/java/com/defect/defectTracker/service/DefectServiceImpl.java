@@ -22,7 +22,7 @@ import java.util.Optional;
 public class DefectServiceImpl implements DefectService {
     Logger logger = LoggerFactory.getLogger(DefectServiceImpl.class);
 
-    private final DefectRepo defectRepository;
+    private DefectRepo defectRepository;
 
     @Override
     public StandardResponse getDefectsByFlexibleFilters(Long statusId, Long severityId, Long priorityId, Long typeId, Long projectId) {
