@@ -20,7 +20,8 @@ public class Releases {
 
     private String releaseType;
 
-    @ManyToOne//(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
 }
+
