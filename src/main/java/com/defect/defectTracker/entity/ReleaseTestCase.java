@@ -31,4 +31,5 @@ public class ReleaseTestCase {
     @JoinColumn(name = "release_id")
     private Releases releases;
 
+
 }

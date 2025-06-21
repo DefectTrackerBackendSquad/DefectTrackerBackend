@@ -1,10 +1,13 @@
 package com.defect.defectTracker.service;
 
+import com.defect.defectTracker.dto.ReleaseTestCaseDto;
 import com.defect.defectTracker.entity.ReleaseTestCase;
 import com.defect.defectTracker.repository.ReleaseTestCaseRepository;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
@@ -29,5 +32,14 @@ public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
         releaseTestCaseRepository.delete(releaseTestCase);
 
         return "Release test case deleted successfully.";
-}
+    }
+
+    public ReleaseTestCaseDto createReleaseTestCase(ReleaseTestCaseDto dto) {
+        return null;
+    }
+
+
+    public List<ReleaseTestCaseDto> getTestCasesByReleaseId(String releaseId) {
+        return List.of();
+    }
 }
