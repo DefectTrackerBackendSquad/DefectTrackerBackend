@@ -54,3 +54,5 @@ public class Defect {
     private Type defectType;
 
 }
+
+

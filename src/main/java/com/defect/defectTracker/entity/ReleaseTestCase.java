@@ -21,11 +21,13 @@ public class ReleaseTestCase {
 
     private String testCaseStatus;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne
+//            (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
+//            (cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_id")
     private Releases releases;
 
