@@ -3,6 +3,6 @@ package com.defect.defectTracker.service;
 
 import com.defect.defectTracker.dto.responseDto.ReleaseResponse;
 
-public interface ReleaseService {
+public interface ReleasesService {
     ReleaseResponse getReleaseByReleaseId(String releaseId);
 }

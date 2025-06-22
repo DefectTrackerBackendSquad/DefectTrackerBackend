@@ -4,7 +4,7 @@ package com.defect.defectTracker.controller;
 import com.defect.defectTracker.dto.responseDto.ReleaseResponse;
 import com.defect.defectTracker.dto.responseDto.ApiResponse;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
-import com.defect.defectTracker.service.ReleaseService;
+import com.defect.defectTracker.service.ReleasesService;
 import com.defect.defectTracker.utils.Constants;
 
 import lombok.RequiredArgsConstructor;
@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/release")
 @RequiredArgsConstructor
-public class ReleaseController {
+public class ReleasesController {
 
     @Autowired
-    private ReleaseService releaseService;
+    private ReleasesService releasesService;
 
     @GetMapping("/{releaseId}")
     public ResponseEntity<ApiResponse> getReleaseByReleaseId(@PathVariable String releaseId) {
         try {
-            ReleaseResponse response = releaseService.getReleaseByReleaseId(releaseId);
+            ReleaseResponse response = releasesService.getReleaseByReleaseId(releaseId);
             ApiResponse successResponse = new ApiResponse(
                     Constants.STATUS_SUCCESS,
                     Constants.RETRIEVED_SUCCESSFULLY,

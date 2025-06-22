@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ReleaseRepo extends JpaRepository<Releases, Long> {
+public interface ReleasesRepo extends JpaRepository<Releases, Long> {
     Optional<Releases> findByReleaseId(String releaseId);
 //    Optional<Releases> getReleaseByReleaseId(String releaseId);
 }
