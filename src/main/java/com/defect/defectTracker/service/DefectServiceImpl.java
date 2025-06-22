@@ -67,28 +67,28 @@ public class DefectServiceImpl implements DefectService {
     @Autowired
     private DefectRepo defectRepo;
 
-    @Override
-    public List<Defect> getDefectsByAssignee(Long userId) {
-        return defectRepo.findByAssignedById(userId);
-    }
+     @Override
+     public List<Defect> getDefectsByAssignee(Long userId) {
+         return defectRepo.findByAssignedById(userId);
+     }
 
 
-    @Override
-    public Defect getDefectByDefectId(String id) {
-        DefectDto defectDto = new DefectDto();
-        Defect defect = defectRepo.findByDefectId(id);
-        logger.info("Fetching defect with ID: {}", id);
-        if (defect != null ){
-            //logger.info("Defect found: {}", defect.get().getDefectId());
-            //BeanUtils.copyProperties(defectDto, defect.get());
-            return defect;
-        } else {
-            return null;
-        }
-    }
+     @Override
+     public Defect getDefectByDefectId(String id) {
+         DefectDto defectDto = new DefectDto();
+         Defect defect = defectRepo.findByDefectId(id);
+         logger.info("Fetching defect with ID: {}", id);
+         if (defect != null) {
+             //logger.info("Defect found: {}", defect.get().getDefectId());
+             //BeanUtils.copyProperties(defectDto, defect.get());
+             return defect;
+         } else {
+             return null;
+         }
+     }
 
-    @Override
-    public Defect updateDefect(Defect defect) {
-        return defectRepo.save(defect);
-    }
-}
+     @Override
+     public Defect updateDefect(Defect defect) {
+         return defectRepo.save(defect);
+     }
+ }
