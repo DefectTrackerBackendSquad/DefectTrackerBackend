@@ -3,7 +3,7 @@ package com.defect.defectTracker.service;
 import com.defect.defectTracker.dto.TestCaseDto;
 import com.defect.defectTracker.entity.TestCase;
 import com.defect.defectTracker.repository.TestCaseRepo;
-import com.defect.defectTracker.service.TestCaseService;
+//import com.defect.defectTracker.service.TestCaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class TestCaseServiceImpl implements TestCaseService {
+public abstract class TestCaseServiceImpl implements TestCaseService {
 
     @Autowired
     private TestCaseRepo testCaseRepository;

@@ -45,7 +45,7 @@ public class TestCaseImportServiceImpl implements TestCaseImportService {
 
             logger.info("Starting import of test cases from CSV file");
 
-            Long testCaseCount = testCaseRepository.findMaxId().orElse(0L);
+            Long testCaseCount = testCaseRepo.findMaxId().orElse(0L);
 
             logger.info("Current test case count: {}", testCaseCount);
 
