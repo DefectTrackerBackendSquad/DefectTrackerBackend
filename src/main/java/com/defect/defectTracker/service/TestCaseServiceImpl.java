@@ -27,19 +27,17 @@ public class TestCaseServiceImpl implements TestCaseService {
         return testCases.stream().map(testCase -> {
             TestCaseDto dto = new TestCaseDto();
             dto.setId(testCase.getId());
-            dto.setBriefDescription(testCase.getDescription());
+            dto.setDescription(testCase.getDescription());
             dto.setSubModuleId(testCase.getSubModule() != null ? String.valueOf(testCase.getSubModule().getId()) : null);
             dto.setSeverityId(testCase.getSeverity() != null ? testCase.getSeverity().getId() : null);
             dto.setSteps(testCase.getSteps());
             dto.setTypeId(testCase.getType() != null ? testCase.getType().getId() : null);
             dto.setModuleId(testCase.getModules() != null ? String.valueOf(testCase.getModules().getId()) : null);
-            dto.setProject(testCase.getProject() != null ? testCase.getProject().getProjectName() : null);
+            dto.setProjectId(testCase.getProject() != null ? String.valueOf(testCase.getProject().getId()) : null);
+            dto.setTestCaseId(testCase.getTestCaseId());
             return dto;
         }).collect(Collectors.toList());
     }
-
-    @Autowired
-    private TestCaseRepo testCaseRepo;
 
     @Autowired
     private SubModuleRepo subModuleRepo;
@@ -120,4 +118,5 @@ public class TestCaseServiceImpl implements TestCaseService {
         if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$") || dto.getProjectId().length() != 6) {
             throw new IllegalArgumentException("projectId must be in format PR0001 and 6 characters.");
         }
+}
 }

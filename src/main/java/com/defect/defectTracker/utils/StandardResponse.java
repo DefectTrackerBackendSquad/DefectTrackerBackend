@@ -12,7 +12,6 @@ public class StandardResponse {
     private String code;
     private String message;
     private Object data;
-
 }
 
 
