@@ -17,5 +17,5 @@ public class Priority {
 
     private String priority;
 
-    private Color color;
+    private String color;
 }

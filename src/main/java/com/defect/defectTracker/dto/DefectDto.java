@@ -1,33 +1,48 @@
 package com.defect.defectTracker.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
+import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import com.defect.defectTracker.entity.*;
+import lombok.Data;
+
+import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DefectDto {
     private Long id;
-    private String defectId;
-    private String description;
-    private int reOpenCount;
-    private String attachment;
-    private String steps;
-
-    // Replace entity references with IDs
-    private Long releaseTestCaseId;
-    private Long assignedById;
-    private Long assignedToId;
+    private String title;
+    private String status;
     private Long severityId;
-    private Long defectStatusId;
+    private LocalDateTime createdDate;
     private Long projectId;
+    private Long assignedToId;  // Developer who is assigned to fix
+    private Long assignedById;  // Person who assigned the defect
+    private Long defectStatusId;
     private Long priorityId;
     private Long typeId;
+    private Integer reOpenCount;
+    private String steps;
+    private Long releaseTestCaseId;
 
-    // Other fields remain the same
+    private String defectId;
+    private String description;
+
+    private String attachment;
+
+    private ReleaseTestCase releaseTestCase;
+    private User assignedBy;
+    private User assignedTo;
+    private Severity severity;
+    private DefectStatus defectStatus;
+    private Project project;
+    private Priority priority;
+    private Type defectType;
+
     private String projectName;
-    private String status;
+
     private String assignName;
-    // ... rest of your fields
+
 }
