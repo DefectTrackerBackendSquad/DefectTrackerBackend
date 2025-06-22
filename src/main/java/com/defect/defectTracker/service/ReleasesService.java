@@ -1,8 +1,8 @@
 // src/main/java/com/example/defectTracker/service/ReleaseService.java
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.responseDto.ReleaseResponse;
+import com.defect.defectTracker.dto.ReleasesDto;
 
 public interface ReleasesService {
-    ReleaseResponse getReleaseByReleaseId(String releaseId);
+    ReleasesDto.ReleaseResponse getReleaseByReleaseId(String releaseId);
 }

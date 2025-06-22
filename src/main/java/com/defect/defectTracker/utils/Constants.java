@@ -1,6 +1,6 @@
 package com.defect.defectTracker.utils;
 
-import com.defect.defectTracker.dto.responseDto.ReleaseResponse;
+import com.defect.defectTracker.dto.ReleasesDto.ReleaseResponse;
 
 public class Constants {
 
