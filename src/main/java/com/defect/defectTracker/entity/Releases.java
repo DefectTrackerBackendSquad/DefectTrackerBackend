@@ -23,5 +23,7 @@ public class Releases {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id")
     private Project project;
+
+
 }
 
