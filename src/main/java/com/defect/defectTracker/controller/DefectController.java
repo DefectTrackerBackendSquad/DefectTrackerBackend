@@ -17,11 +17,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefectController {
     @Autowired
-    private DefectService defectService;
+    private DefectService DefectService;
 
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
-        Defect defect = defectService.getDefectByDefectId(id);
+        Defect defect = DefectService.getDefectByDefectId(id);
         if (defect != null) {
             return ResponseEntity.ok(
                     new StandardResponse("Success", "Retrieved successfully", defect, 200)
@@ -33,7 +33,7 @@ public class DefectController {
 
     @GetMapping("/assignee/{userId}")
     public ResponseEntity<StandardResponse> getDefectsByAssignee(@PathVariable Long userId) {
-        List<Defect> defects = defectService.getDefectsByAssignee(userId);
+        List<Defect> defects = DefectService.getDefectsByAssignee(userId);
         return ResponseEntity.ok(
                 new StandardResponse("Success", "Defects retrieved", defects, 200)
         );
@@ -66,7 +66,7 @@ public class DefectController {
         }
 
         // Get existing defect
-        Defect existing = defectService.getDefectByDefectId(defectDTO.getDefectId());
+        Defect existing = DefectService.getDefectByDefectId(defectDTO.getDefectId());
         if (existing == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -85,7 +85,7 @@ public class DefectController {
         existing.setAttachment(defectDTO.getAttachment());
 
         try {
-            Defect updated = defectService.updateDefect(existing);
+            Defect updated = DefectService.updateDefect(existing);
             return ResponseEntity
                     .ok(new StandardResponse(
                             "success",
