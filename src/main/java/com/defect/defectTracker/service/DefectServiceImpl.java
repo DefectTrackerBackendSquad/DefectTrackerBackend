@@ -3,24 +3,23 @@ import com.defect.defectTracker.exception.ResourceNotFoundException;
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.*;
 import com.defect.defectTracker.repository.DefectRepo;
-import com.defect.defectTracker.service.DefectService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor // Lombok generates constructor
 public class DefectServiceImpl implements DefectService {
 
-    private final DefectRepo defectRepo;
+  private final DefectRepo defectRepo;
 
     @Override
     public DefectDto getDefectByTestcaseId(String testcaseId) {
         Defect defect = defectRepo.findByReleaseTestCaseId(testcaseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Test Case not found"));
-
-
-        //Defect defect = defectRepo.findByReleaseTestCase_ReleaseTestCaseId(testcaseId)
-               // .orElseThrow(() -> new ResourceNotFoundException("Test case not found"));
 
         DefectDto dto = new DefectDto();
         dto.setId(defect.getDefectId());
