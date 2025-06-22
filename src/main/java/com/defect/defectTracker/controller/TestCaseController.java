@@ -1,5 +1,6 @@
 package com.defect.defectTracker.controller;
 
+import com.defect.defectTracker.dto.TestCaseDto;
 import com.defect.defectTracker.service.TestCaseImportService;
 import com.defect.defectTracker.service.TestCaseService;
 import com.defect.defectTracker.utils.StandardResponse;
@@ -9,31 +10,34 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.service.TestCaseService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.io.IOException;
+import java.util.List;
 
 
 @RestController
 @RequestMapping("/api/v1/testcase")
+@CrossOrigin
 @RequiredArgsConstructor
 public class TestCaseController {
 
     @Autowired
+    private TestCaseService testcaseService;
+    private TestCaseImportService importService;
 
-    private  TestCaseImportService importService;
-    private  TestCaseService testCaseService;
 
+    @GetMapping("/{subModuleId}")
+    public ResponseEntity<?> getSubModuleId(@PathVariable Long subModuleId) {
+        List<TestCaseDto> testCases = testcaseService.getTestCasesBySubModuleId(subModuleId);
+        if (testCases == null || testCases.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new StandardResponse("failure", "4000", "Data not found", null)
+            );
+        }
+        return ResponseEntity.ok().body(
+                new StandardResponse("success", "2000", "Retrieved Successfully.!", testCases)
+        );
+    }
 
     @PostMapping("/import")
     public ResponseEntity<String> importTestCases(@RequestParam("file") MultipartFile file) {
@@ -59,41 +63,31 @@ public class TestCaseController {
                 dto.getSteps() == null || dto.getSteps().trim().isEmpty() ||
                 dto.getTypeId() == null ||
                 dto.getProjectId() == null || dto.getProjectId().trim().isEmpty()) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "failure");
-            response.put("statusCode", 4000);
-            response.put("message", "Missing required fields");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new StandardResponse("failure", "4000", "Missing required fields", null)
+            );
         }
 
-        if (testCaseService.testCaseExists(dto.getTestCaseId())) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "failure");
-            response.put("statusCode", 4000);
-            response.put("message", "TestCase already exists");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        if (testcaseService.testCaseExists(dto.getTestCaseId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new StandardResponse("failure", "4000", "TestCase already exists", null)
+            );
         }
 
         try {
-            TestCaseDto saved = testCaseService.createTestCase(dto);
+            TestCaseDto saved = testcaseService.createTestCase(dto);
             if (saved == null) {
-                Map<String, Object> response = new HashMap<>();
-                response.put("status", "failure");
-                response.put("statusCode", 4000);
-                response.put("message", "Save Failed");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                        new StandardResponse("failure", "4000", "Save Failed", null)
+                );
             }
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "success");
-            response.put("statusCode", 2000);
-            response.put("message", "Saved Successfully.");
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body(
+                    new StandardResponse("success", "2000", "Saved Successfully.", null)
+            );
         } catch (Exception e) {
-            Map<String, Object> response = new HashMap<>();
-            response.put("status", "failure");
-            response.put("statusCode", 4000);
-            response.put("message", "Save Failed");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new StandardResponse("failure", "4000", "Save Failed", null)
+            );
         }
     }
 }

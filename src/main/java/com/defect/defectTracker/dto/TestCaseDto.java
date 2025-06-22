@@ -1,15 +1,20 @@
 package com.defect.defectTracker.dto;
 
-import lombok.Data;
+
+import lombok.*;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TestCaseDto {
-    private String testCaseId;
+    private Long id;
     private String description;
-    private String steps;
     private String subModuleId;
+    private Long severityId;
+    private String steps;
+    private Long typeId;
     private String moduleId;
     private String projectId;
-    private Long severityId;
-    private Long typeId;
+    private String testCaseId;
+
 }

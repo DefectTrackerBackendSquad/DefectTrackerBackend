@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
+import java.util.List;
 
 @Repository
 @Transactional
@@ -16,4 +17,5 @@ public interface TestCaseRepo extends JpaRepository<TestCase, String> {
 
     @Query("SELECT MAX(t.id) FROM TestCase t")
     Optional<Long> findMaxId();
+    List<TestCase> findBySubModule_Id(Long subModuleId);
 }

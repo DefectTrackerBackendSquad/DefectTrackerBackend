@@ -1,22 +1,43 @@
 package com.defect.defectTracker.service;
 
-
 import com.defect.defectTracker.dto.TestCaseDto;
+import com.defect.defectTracker.repository.*;
 import com.defect.defectTracker.entity.TestCase;
-import com.defect.defectTracker.repository.ModuleRepo;
-import com.defect.defectTracker.repository.ProjectRepo;
-import com.defect.defectTracker.repository.SubModuleRepo;
-import com.defect.defectTracker.repository.TestCaseRepo;
-import com.defect.defectTracker.repository.SeverityRepo;
-import com.defect.defectTracker.repository.TypeRepo;
+
+
+import jakarta.transaction.Transactional;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Data
 @Service
+@Transactional
 public class TestCaseServiceImpl implements TestCaseService {
 
     @Autowired
     private TestCaseRepo testCaseRepo;
+
+    @Override
+    public List<TestCaseDto> getTestCasesBySubModuleId(Long subModuleId) {
+        List<TestCase> testCases = testCaseRepo.findBySubModule_Id(subModuleId);
+        return testCases.stream().map(testCase -> {
+            TestCaseDto dto = new TestCaseDto();
+            dto.setId(testCase.getId());
+            dto.setDescription(testCase.getDescription());
+            dto.setSubModuleId(testCase.getSubModule() != null ? String.valueOf(testCase.getSubModule().getId()) : null);
+            dto.setSeverityId(testCase.getSeverity() != null ? testCase.getSeverity().getId() : null);
+            dto.setSteps(testCase.getSteps());
+            dto.setTypeId(testCase.getType() != null ? testCase.getType().getId() : null);
+            dto.setModuleId(testCase.getModules() != null ? String.valueOf(testCase.getModules().getId()) : null);
+            dto.setProjectId(testCase.getProject() != null ? String.valueOf(testCase.getProject().getId()) : null);
+            dto.setTestCaseId(testCase.getTestCaseId());
+            return dto;
+        }).collect(Collectors.toList());
+    }
 
     @Autowired
     private SubModuleRepo subModuleRepo;
@@ -97,6 +118,5 @@ public class TestCaseServiceImpl implements TestCaseService {
         if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$") || dto.getProjectId().length() != 6) {
             throw new IllegalArgumentException("projectId must be in format PR0001 and 6 characters.");
         }
-    }
 }
-
+}
