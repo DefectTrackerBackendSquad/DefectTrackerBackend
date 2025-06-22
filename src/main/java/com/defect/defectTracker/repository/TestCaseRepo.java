@@ -10,7 +10,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.List;
 
+import java.util.List;
 @Repository
+
+public interface TestCaseRepo extends JpaRepository<TestCase, Long> {
+    List<TestCase> findByModules_Id(Long moduleId);
+
 @Transactional
 public interface TestCaseRepo extends JpaRepository<TestCase, String> {
     boolean existsByTestCaseId(String testCaseId);
