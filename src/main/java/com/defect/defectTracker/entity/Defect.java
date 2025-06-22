@@ -17,11 +17,9 @@ public class Defect {
 
     private String description;
     private int reOpenCount;
-
-    @Transient
     private String attachment;
     private String steps;
-    private LocalDateTime createdDate;
+
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -36,7 +34,7 @@ public class Defect {
     @JoinColumn(name = "assigned_to")
     private User assignedTo;
 
-    @ManyToOne//(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "severity_id")
     private Severity severity;
 
@@ -48,12 +46,13 @@ public class Defect {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToOne//(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "priority_id")
     private Priority priority;
 
-    @ManyToOne//(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type defectType;
+
 
 }

@@ -2,7 +2,6 @@ package com.defect.defectTracker.repository;
 
 import com.defect.defectTracker.entity.Defect;
 import jakarta.transaction.Transactional;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -26,6 +25,7 @@ public interface DefectRepo extends JpaRepository<Defect, Long> {
             "LEFT JOIN FETCH d.defectStatus " +
             "WHERE d.assignedBy.id = :userId")
     List<Defect> findByAssignedById(@Param("userId") Long userId);
-    Defect findByDefectId(String id);
+    Defect findByDefectId(String defectId);
+    List<Defect> findAll();
 }
 

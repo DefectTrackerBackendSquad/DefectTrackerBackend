@@ -1,21 +1,19 @@
 package com.defect.defectTracker.dto;
 
 import lombok.AllArgsConstructor;
+
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.defect.defectTracker.entity.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-
 @Data
-
 @AllArgsConstructor
 @NoArgsConstructor
 public class DefectDto {
     private Long id;
     private String title;
-
     private String status;
     private Long severityId;
     private LocalDateTime createdDate;
@@ -31,6 +29,7 @@ public class DefectDto {
 
     private String defectId;
     private String description;
+
     private String attachment;
 
     private ReleaseTestCase releaseTestCase;
@@ -41,19 +40,9 @@ public class DefectDto {
     private Project project;
     private Priority priority;
     private Type defectType;
-    private String projectName;
-    private String assignName;
 
-    public DefectDto(Defect defect) {
-        if (defect == null) return;
-        this.id = defect.getId();
-        this.defectId = defect.getDefectId();
-        this.description = defect.getDescription();
-        this.steps = defect.getSteps();
-        this.reOpenCount = defect.getReOpenCount();
-        this.assignName = (defect.getAssignedBy() != null) ? defect.getAssignedBy().getFirstName() + " " + defect.getAssignedBy().getLastName() : null;
-        this.projectName = (defect.getProject() != null) ? defect.getProject().getProjectName() : null;
-        this.status = (defect.getDefectStatus() != null) ? defect.getDefectStatus().getDefectStatusName() : null;
-    }
+    private String projectName;
+
+    private String assignName;
 
 }
