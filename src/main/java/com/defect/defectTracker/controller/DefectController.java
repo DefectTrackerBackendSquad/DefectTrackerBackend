@@ -1,4 +1,5 @@
 package com.defect.defectTracker.controller;
+
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
@@ -8,13 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/defect")
 @RequiredArgsConstructor
-
 public class DefectController {
     @Autowired
     private DefectService defectService;
@@ -30,10 +30,13 @@ public class DefectController {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(new StandardResponse("Error", "Defect not found", null, 404));
     }
+
     @GetMapping("/assignee/{userId}")
-    public ResponseEntity<List<Defect>> getDefectsByAssignee(@PathVariable Long userId) {
+    public ResponseEntity<StandardResponse> getDefectsByAssignee(@PathVariable Long userId) {
         List<Defect> defects = defectService.getDefectsByAssignee(userId);
-        return ResponseEntity.ok(defects);
+        return ResponseEntity.ok(
+                new StandardResponse("Success", "Defects retrieved", defects, 200)
+        );
     }
 
     @PutMapping
@@ -75,9 +78,11 @@ public class DefectController {
                     ));
         }
 
-        // Update fields
+        // Update simple fields
         existing.setDescription(defectDTO.getDescription());
         existing.setSteps(defectDTO.getSteps());
+        existing.setReOpenCount(defectDTO.getReOpenCount());
+        existing.setAttachment(defectDTO.getAttachment());
 
         try {
             Defect updated = defectService.updateDefect(existing);
@@ -93,10 +98,9 @@ public class DefectController {
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new StandardResponse(
                             "error",
-                            "Failed to update defect",
+                            "Failed to update defect: " + e.getMessage(),
                             null,
                             HttpStatus.INTERNAL_SERVER_ERROR.value()
                     ));
         }
-    }
-}
+    }}
