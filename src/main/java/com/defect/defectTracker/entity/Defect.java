@@ -11,9 +11,7 @@ public class Defect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String defectId;
-
     private String description;
     private int reOpenCount;
     private Media attachment;

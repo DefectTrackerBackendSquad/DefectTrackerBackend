@@ -19,13 +19,8 @@ public class DefectController {
 
     @GetMapping("/testcase/{testcaseId}")
     public ResponseEntity<ApiResponse> getDefectByTestcaseId(@PathVariable String testcaseId) {
-        try {
-            DefectDto dto = defectService.getDefectByTestcaseId(testcaseId);
-            return ResponseEntity.ok(new ApiResponse(20000, "Retrieved Successfully", dto));
-        } catch (GlobalExceptionHandler ex) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ApiResponse(40000, ex.getMessage(), null));
-        }
+        DefectDto dto = defectService.getDefectByTestcaseId(testcaseId);
+        return ResponseEntity.ok(new ApiResponse(20000, "Retrieved Successfully", dto));
     }
 
     @Getter

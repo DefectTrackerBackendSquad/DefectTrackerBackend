@@ -10,11 +10,13 @@ import java.util.Date;
 @Data
 @Entity
 public class ReleaseTestCase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String releaseTestCaseId;
+    @Column(name = "release_test_case_id")
+    private String releaseTestCaseId; // ✅ Mapped correctly, logical name
 
     private Date testDate;
     private Time testTime;
@@ -22,11 +24,10 @@ public class ReleaseTestCase {
     private String testCaseStatus;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_case_id")
+    @JoinColumn(name = "test_case_id") // ✅ FK column to TestCase entity
     private TestCase testCase;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_id")
     private Releases releases;
-
 }

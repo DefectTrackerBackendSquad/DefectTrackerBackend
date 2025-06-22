@@ -4,6 +4,11 @@ import com.defect.defectTracker.entity.Project;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface ProjectRepo extends JpaRepository<Project, String> {
+public interface ProjectRepo extends JpaRepository<Project, Long> {
+
+    // custom method to find project by projectId (assuming it's a String)
+    Optional<Project> findByProjectId(String projectId);
 }

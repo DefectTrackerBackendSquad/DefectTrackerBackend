@@ -30,12 +30,16 @@ public class TestCase {
     @JoinColumn(name = "project_id")
     private Project project;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "severity_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "severity_id") // FK in test_case table (numeric FK)
     private Severity severity;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type type;
+
+  //  @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+   // @JoinColumn(name = "testcase_id")
+  //  private Type testcase;
 
 }
