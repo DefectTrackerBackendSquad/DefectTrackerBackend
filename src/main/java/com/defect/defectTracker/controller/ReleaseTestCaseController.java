@@ -27,7 +27,7 @@ public class ReleaseTestCaseController {
         return ResponseEntity.ok(
 
                 new java.util.HashMap<String, Object>() {{
-                    git commitb
+
                     put("status", "success");
                     put("statusCode", 2000);
                     put("message", "Updated Successfully");
