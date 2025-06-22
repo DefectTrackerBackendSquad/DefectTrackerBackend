@@ -8,11 +8,12 @@ import lombok.*;
 @NoArgsConstructor
 public class TestCaseDto {
     private Long id;
-    private String briefDescription;
+    private String Description;
     private String subModuleId;
     private Long severityId;
     private String steps;
     private Long typeId;
     private String moduleId;
-    private String project;
+    private String projectId;
+    private String testCaseId;
 }

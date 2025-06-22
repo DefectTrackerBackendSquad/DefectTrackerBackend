@@ -1,7 +1,7 @@
 package com.defect.defectTracker.service;
 
 import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.repository.TestCaseRepo;
+import com.defect.defectTracker.repository.*;
 import com.defect.defectTracker.entity.TestCase;
 
 
@@ -37,4 +37,87 @@ public class TestCaseServiceImpl implements TestCaseService {
             return dto;
         }).collect(Collectors.toList());
     }
+
+    @Autowired
+    private TestCaseRepo testCaseRepo;
+
+    @Autowired
+    private SubModuleRepo subModuleRepo;
+
+    @Autowired
+    private ModuleRepo moduleRepo;
+
+    @Autowired
+    private ProjectRepo projectRepo;
+
+    @Autowired
+    private SeverityRepo severityRepo;
+
+    @Autowired
+    private TypeRepo typeRepo;
+
+    @Override
+    public boolean testCaseExists(String testCaseId) {
+        return testCaseRepo.existsByTestCaseId(testCaseId);
+    }
+
+    @Override
+    public TestCaseDto createTestCase(TestCaseDto dto) {
+        validateTestCaseDto(dto);
+        TestCase testCase = new TestCase();
+        testCase.setTestCaseId(dto.getTestCaseId());
+        testCase.setDescription(dto.getDescription());
+        testCase.setSteps(dto.getSteps());
+
+        if (dto.getSubModuleId() != null) {
+            testCase.setSubModule(subModuleRepo.findBySubModuleId(dto.getSubModuleId()).orElse(null));
+        }
+        if (dto.getModuleId() != null) {
+            testCase.setModules(moduleRepo.findByModuleId(dto.getModuleId()).orElse(null));
+        }
+        if (dto.getProjectId() != null) {
+            testCase.setProject(projectRepo.findByProjectId(dto.getProjectId()).orElse(null));
+        }
+        if (dto.getSeverityId() != null) {
+            testCase.setSeverity(severityRepo.findById(dto.getSeverityId()).orElse(null));
+        }
+        if (dto.getTypeId() != null) {
+            testCase.setType(typeRepo.findById(dto.getTypeId()).orElse(null));
+        }
+
+        TestCase saved = testCaseRepo.save(testCase);
+        return mapToDto(saved);
+    }
+
+    private TestCaseDto mapToDto(TestCase testCase) {
+        TestCaseDto dto = new TestCaseDto();
+        dto.setTestCaseId(testCase.getTestCaseId());
+        dto.setDescription(testCase.getDescription());
+        dto.setSteps(testCase.getSteps());
+        dto.setSubModuleId(testCase.getSubModule() != null ? testCase.getSubModule().getSubModuleId() : null);
+        dto.setModuleId(testCase.getModules() != null ? testCase.getModules().getModuleId() : null);
+        dto.setProjectId(testCase.getProject() != null ? testCase.getProject().getProjectId() : null);
+        dto.setSeverityId(testCase.getSeverity() != null ? testCase.getSeverity().getId() : null);
+        dto.setTypeId(testCase.getType() != null ? testCase.getType().getId() : null);
+        return dto;
+    }
+
+    private void validateTestCaseDto(TestCaseDto dto) {
+//        // description: string only, max 255
+//        if (dto.getDescription() == null || dto.getDescription().length() > 255 || !dto.getDescription().matches("^[\\p{L}0-9 .,'\"!?-]*$")) {
+//            throw new IllegalArgumentException("Description must be a string with max 255 characters.");
+//        }
+//
+//        // steps: string only, max 255
+//        if (dto.getSteps() == null || dto.getSteps().length() > 255 || !dto.getSteps().matches("^[\\p{L}0-9 .,'\"!?-]*$")) {
+//            throw new IllegalArgumentException("Steps must be a string with max 255 characters.");
+//        }
+        // moduleId: must match MO + 4 digits, max 6
+        if (dto.getModuleId() == null || !dto.getModuleId().matches("^MO\\d{4}$") || dto.getModuleId().length() != 6) {
+            throw new IllegalArgumentException("moduleId must be in format MO0001 and 6 characters.");
+        }
+        // projectId: must match PR + 4 digits, max 6
+        if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$") || dto.getProjectId().length() != 6) {
+            throw new IllegalArgumentException("projectId must be in format PR0001 and 6 characters.");
+        }
 }
