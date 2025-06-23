@@ -1,7 +1,8 @@
 package com.defect.defectTracker.service;
-
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
+import com.defect.defectTracker.entity.*;
 import com.defect.defectTracker.repository.DefectRepo;
 import com.defect.defectTracker.utils.StandardResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,13 @@ public class DefectServiceImpl implements DefectService {
     private DefectRepo defectRepository;
 
     @Override
+    public DefectDto getDefectByTestcaseId(String testcaseId) {
+        Defect defect = defectRepo.findByReleaseTestCaseId(testcaseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Test Case not found"));
+
+
+        //Defect defect = defectRepo.findByReleaseTestCase_ReleaseTestCaseId(testcaseId)
+               // .orElseThrow(() -> new ResourceNotFoundException("Test case not found"));
     public StandardResponse getDefectsByFlexibleFilters(Long statusId, Long severityId, Long priorityId, Long typeId, Long projectId) {
         List<Defect> defects = defectRepository.findWithAllFilters(statusId, severityId, priorityId, typeId, projectId);
         return buildResponse(defects);
@@ -46,6 +54,13 @@ public class DefectServiceImpl implements DefectService {
 
     private DefectDto convertToDefectDto(Defect defect) {
         DefectDto dto = new DefectDto();
+        dto.setId(defect.getDefectId());
+        dto.setDefectTitle(defect.getDescription());
+        dto.setDescriptions(defect.getDescription());
+      //  dto.setTestcaseId(defect.getReleaseTestCase().getReleaseTestCaseId());
+        dto.setSeverity(defect.getSeverity().getSeverityName());
+        dto.setDefectStatus(defect.getDefectStatus().getDefectStatusName());
+
         dto.setId(defect.getId());
         dto.setTitle(defect.getDescription());
         dto.setDescription(defect.getDescription());

@@ -3,8 +3,6 @@ package com.defect.defectTracker.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.lang.Module;
-
 @Data
 @Entity
 public class AllocateModule {

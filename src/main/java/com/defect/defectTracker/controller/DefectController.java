@@ -1,10 +1,12 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.DefectDto;
-import com.defect.defectTracker.entity.Defect;
+import com.defect.defectTracker.exceptionHandler.GlobalExceptionHandler;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +16,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/defect")
+@AllArgsConstructor
 @RequiredArgsConstructor
 public class DefectController {
+    @Autowired
+    private DefectService defectService;
     @Autowired
     private DefectService DefectService;
 
@@ -31,6 +36,12 @@ public class DefectController {
                 .body(new StandardResponse("Error", "Defect not found", null, 404));
     }
 
+    @GetMapping("/testcase/{testcaseId}")
+    public ResponseEntity<StandardResponse> getDefectByTestcaseId(@PathVariable String testcaseId) {
+        DefectDto dto = defectService.getDefectByTestcaseId(testcaseId);
+        return ResponseEntity.ok(new StandardResponse("Success", 2000, "Retrieved Successfully", dto));
+    }
+}
     @GetMapping("/filter")
     public ResponseEntity<Object> getDefectsByFlexibleFilters(
             @RequestParam(required = false) Long statusId,
@@ -122,7 +133,7 @@ public class DefectController {
                             HttpStatus.INTERNAL_SERVER_ERROR.value()
                     ));
         }
-    }}
+    }
 
 
 
