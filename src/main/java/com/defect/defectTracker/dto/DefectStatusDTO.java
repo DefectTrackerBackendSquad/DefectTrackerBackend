@@ -15,3 +15,5 @@ public class DefectStatusDTO {
     private String message;
     private String defectStatus; // include the input field
 }
+
+

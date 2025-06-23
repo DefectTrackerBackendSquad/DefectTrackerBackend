@@ -8,3 +8,4 @@ import org.springframework.stereotype.Repository;
 public interface DefectStatusRepo extends JpaRepository<DefectStatus, Long> {
     DefectStatus findByDefectStatusNameIgnoreCase(String defectStatusName);
 }
+
