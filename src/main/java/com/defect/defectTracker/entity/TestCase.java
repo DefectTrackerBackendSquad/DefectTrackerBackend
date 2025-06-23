@@ -3,9 +3,12 @@ package com.defect.defectTracker.entity;
 import com.defect.defectTracker.entity.Modules;
 import jakarta.persistence.*;
 import lombok.Data;
+import com.defect.defectTracker.entity.Modules;
+import lombok.RequiredArgsConstructor;
 
 @Data
 @Entity
+@RequiredArgsConstructor
 public class TestCase {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,5 +40,22 @@ public class TestCase {
     private Type type;
 
     public void setModules(Modules moduleId) {
+
     }
+
+//    public void setModules(Modules moduleId) {
+//    }
+
+//    public Thread getModules() {
+//    }
+
+//    public void setModules(Modules moduleId) {
+//    }
+//
+//    public Thread getModules() {
+//    }
 }
+
+
+
+

@@ -3,6 +3,7 @@ package com.defect.defectTracker.service;
 import com.defect.defectTracker.entity.TestCase;
 import com.defect.defectTracker.repository.*;
 import jakarta.transaction.Transactional;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
@@ -19,18 +20,28 @@ import java.io.Reader;
 
 @Service
 @RequiredArgsConstructor
+
 @Transactional
-public class TestCaseImportServiceImpl implements TestCaseImportService {
+public class TestCaseImportServiceImpl extends TestCaseImportService {
 
     @Autowired
     private TestCaseRepo testCaseRepository;
 
-    private final TestCaseRepo testCaseRepo;
-    private final SubModuleRepo subModuleRepo;
-    private final ModuleRepo moduleRepo;
-    private final ProjectRepo projectRepo;
-    private final SeverityRepo severityRepo;
-    private final TypeRepo typeRepo;
+    private  TestCaseRepo testCaseRepo;
+    private  SubModuleRepo subModuleRepo;
+    private  ModuleRepo moduleRepo;
+    private ProjectRepo projectRepo;
+    private  SeverityRepo severityRepo;
+    private  TypeRepo typeRepo;
+
+    public TestCaseImportServiceImpl(TestCaseRepo testCaseRepo, SubModuleRepo subModuleRepo, ModuleRepo moduleRepo, ProjectRepo projectRepo, SeverityRepo severityRepo, TypeRepo typeRepo) {
+        this.testCaseRepo = testCaseRepo;
+        this.subModuleRepo = subModuleRepo;
+        this.moduleRepo = moduleRepo;
+        this.projectRepo = projectRepo;
+        this.severityRepo = severityRepo;
+        this.typeRepo = typeRepo;
+    }
 
     @Transactional
     public void importTestCasesFromCsv(MultipartFile file) throws IOException {
