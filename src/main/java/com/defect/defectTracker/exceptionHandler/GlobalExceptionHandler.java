@@ -19,6 +19,6 @@ public class GlobalExceptionHandler {
         logger.info("No relevant foreign data there");
         return ResponseEntity.ok("Data Not Found");
 
-}
+    }
 }
 
