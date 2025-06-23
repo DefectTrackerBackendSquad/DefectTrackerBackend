@@ -9,9 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class StandardResponse {
     private String status;
-    private String code;
     private String message;
     private Object data;
+    private int statusCode;
 }
-
-
