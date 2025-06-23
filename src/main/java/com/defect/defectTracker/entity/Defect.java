@@ -19,7 +19,7 @@ public class Defect {
 
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_test_case_id")
     private ReleaseTestCase releaseTestCase;
 

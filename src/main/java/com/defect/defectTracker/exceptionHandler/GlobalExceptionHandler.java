@@ -7,6 +7,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,7 +34,7 @@ public class GlobalExceptionHandler {
                 ApiResponseCodes.MSG_UPDATE_FAILED
         );
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-}
+    }
 
     // Handle IllegalArgumentException (used in your updateDefectStatus)
     @ExceptionHandler(IllegalArgumentException.class)

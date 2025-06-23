@@ -83,17 +83,7 @@ public class TestCaseServiceImpl implements TestCaseService {
 
         TestCase testCase = optional.get();
 
-        TestCaseDto dto = new TestCaseDto(
-                testCase.getId(),
-                testCase.getTestCaseId(),
-                testCase.getDescription(),
-                testCase.getSteps(),
-                testCase.getModules().getId(),
-                testCase.getProject().getId(),
-                testCase.getSeverity().getId(),
-                testCase.getSubModule().getId(),
-                testCase.getType().getId()
-        );
+        TestCaseDto dto = new TestCaseDto();
 
         repository.deleteByTestCaseId(testCaseId); // Deletes without lazy loading issues
         return dto;

@@ -15,8 +15,7 @@ public class ReleaseTestCase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "release_test_case_id")
-    private String releaseTestCaseId; // ✅ Mapped correctly, logical name
+    private String releaseTestCaseId;
 
     private Date testDate;
     private Time testTime;
@@ -24,7 +23,7 @@ public class ReleaseTestCase {
     private String testCaseStatus;
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "test_case_id") // ✅ FK column to TestCase entity
+    @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
