@@ -10,6 +10,7 @@ import java.util.Date;
 @Data
 @Entity
 public class ReleaseTestCase {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,5 +29,4 @@ public class ReleaseTestCase {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_id")
     private Releases releases;
-
 }

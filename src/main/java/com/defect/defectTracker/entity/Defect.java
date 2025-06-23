@@ -11,9 +11,7 @@ public class Defect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String defectId;
-
     private String description;
     private int reOpenCount;
     private Media attachment;
@@ -21,7 +19,7 @@ public class Defect {
 
 
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_test_case_id")
     private ReleaseTestCase releaseTestCase;
 
