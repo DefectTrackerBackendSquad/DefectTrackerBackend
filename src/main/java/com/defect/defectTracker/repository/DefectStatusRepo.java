@@ -6,5 +6,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DefectStatusRepo extends JpaRepository<DefectStatus, Long> {
+<<<<<<< Updated upstream
     DefectStatus findByDefectStatusNameIgnoreCase(String defectStatusName);
+=======
+    boolean existsByDefectStatusNameIgnoreCase(String defectStatusName);
+>>>>>>> Stashed changes
 }

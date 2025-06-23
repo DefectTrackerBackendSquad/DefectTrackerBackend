@@ -1,5 +1,6 @@
 package com.defect.defectTracker.service;
 
+<<<<<<< Updated upstream
 import com.defect.defectTracker.dto.DefectStatusDTO;
 import com.defect.defectTracker.entity.DefectStatus;
 import com.defect.defectTracker.repository.DefectStatusRepo;
@@ -8,10 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.regex.Pattern;
 
+=======
+import com.defect.defectTracker.dto.DefectStatusDto;
+import com.defect.defectTracker.entity.DefectStatus;
+import com.defect.defectTracker.repository.DefectStatusRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+
+>>>>>>> Stashed changes
 @Service
 public class DefectStatusServiceImpl implements DefectStatusService {
 
     @Autowired
+<<<<<<< Updated upstream
     private DefectStatusRepo defectStatusRepository;
 
     @Override
@@ -64,3 +75,25 @@ public class DefectStatusServiceImpl implements DefectStatusService {
         return response;
     }
 }
+=======
+    private DefectStatusRepo defectStatusRepo;
+
+    @Override
+    public DefectStatusDto createDefectStatus(DefectStatusDto defectStatusDto) {
+        // Check for duplicate (case-insensitive)
+        if (defectStatusRepo.existsByDefectStatusNameIgnoreCase(defectStatusDto.getDefectStatusName())) {
+            throw new DataIntegrityViolationException("Defect status already exists");
+        }
+
+        DefectStatus defectStatus = new DefectStatus();
+        defectStatus.setDefectStatusName(defectStatusDto.getDefectStatusName());
+
+        DefectStatus savedDefectStatus = defectStatusRepo.save(defectStatus);
+
+        DefectStatusDto responseDto = new DefectStatusDto();
+        responseDto.setDefectStatusName(savedDefectStatus.getDefectStatusName());
+
+        return responseDto;
+    }
+}
+>>>>>>> Stashed changes
