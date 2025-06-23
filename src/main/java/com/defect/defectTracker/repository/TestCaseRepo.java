@@ -1,11 +1,12 @@
 package com.defect.defectTracker.repository;
 
 import com.defect.defectTracker.entity.TestCase;
-import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.*;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
 import java.util.Optional;
 import org.springframework.data.repository.query.Param;
 import java.util.Optional;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.List;
 @Repository
 public interface TestCaseRepo extends JpaRepository<TestCase, Long> {
+    List<TestCase> findByProjectProjectId(String projectId);
     Optional<TestCase> findByTestCaseId(String testCaseId);
     boolean existsByTestCaseId(String testCaseId);
     @Modifying
@@ -28,7 +30,3 @@ public interface TestCaseRepo extends JpaRepository<TestCase, Long> {
     Optional<Long> findMaxId();
     List<TestCase> findBySubModule_Id(Long subModuleId);
 }
-
-
-
-

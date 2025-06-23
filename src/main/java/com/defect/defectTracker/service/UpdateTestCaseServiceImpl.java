@@ -8,7 +8,7 @@ import com.defect.defectTracker.repository.*;
 import com.defect.defectTracker.response.ApiResponse;
 
 
-import com.defect.defectTracker.exception.ResourceNotFoundException;
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

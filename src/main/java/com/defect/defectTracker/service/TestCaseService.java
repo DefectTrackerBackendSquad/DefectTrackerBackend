@@ -14,4 +14,5 @@ public interface TestCaseService {
     List<TestCaseDto> getTestCasesBySubModuleId(Long subModuleId);
     boolean testCaseExists(String testCaseId);
     TestCaseDto createTestCase(TestCaseDto testCaseDto);
+    List<TestCaseDto> getTestCasesByProjectId(String projectId);
 }
