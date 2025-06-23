@@ -8,6 +8,7 @@ import com.defect.defectTracker.utils.StandardResponse;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class TestCaseController {
 
-    private final TestCaseService testCaseService;
-    private final TestCaseImportService importService;
+    @Autowired
+    private TestCaseService testCaseService;
+    private TestCaseImportService importService;
 
     @DeleteMapping("/delete/{testCaseId}")
     public ResponseEntity<?> deleteByTestCaseId(@PathVariable String testCaseId) {
