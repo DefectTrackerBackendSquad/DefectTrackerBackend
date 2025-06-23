@@ -4,6 +4,7 @@ import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,14 +15,15 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/defect")
+@AllArgsConstructor
 @RequiredArgsConstructor
-public class DefectController {
+public class defectController {
     @Autowired
-    private DefectService DefectService;
+    private DefectService defectService;
 
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
-        Defect defect = DefectService.getDefectByDefectId(id);
+        Defect defect = defectService.getDefectByDefectId(id);
         if (defect != null) {
             return ResponseEntity.ok(
                     new StandardResponse("Success", "Retrieved successfully", defect, 200)
@@ -39,7 +41,7 @@ public class DefectController {
             @RequestParam(required = false) Long typeId,
             @RequestParam Long projectId) {
         try {
-            StandardResponse response = DefectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
+            StandardResponse response = defectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -54,7 +56,7 @@ public class DefectController {
 
     @GetMapping("/assignee/{userId}")
     public ResponseEntity<List<Defect>> getDefectsByAssignee(@PathVariable Long userId) {
-        List<Defect> defects = DefectService.getDefectsByAssignee(userId);
+        List<Defect> defects = defectService.getDefectsByAssignee(userId);
         return ResponseEntity.ok(defects);
     }
 
@@ -85,7 +87,7 @@ public class DefectController {
         }
 
         // Get existing defect
-        Defect existing = DefectService.getDefectByDefectId(defectDTO.getDefectId());
+        Defect existing = defectService.getDefectByDefectId(defectDTO.getDefectId());
         if (existing == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -104,7 +106,7 @@ public class DefectController {
         existing.setAttachment(defectDTO.getAttachment());
 
         try {
-            Defect updated = DefectService.updateDefect(existing);
+            Defect updated = defectService.updateDefect(existing);
             return ResponseEntity
                     .ok(new StandardResponse(
                             "success",
@@ -122,7 +124,8 @@ public class DefectController {
                             HttpStatus.INTERNAL_SERVER_ERROR.value()
                     ));
         }
-    }}
+    }
+}
 
 
 

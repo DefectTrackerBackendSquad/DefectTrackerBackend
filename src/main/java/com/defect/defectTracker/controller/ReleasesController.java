@@ -79,19 +79,44 @@ public class ReleasesController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date releaseDate,
             @RequestParam(required = false) Long projectId
     ) {
-        List<ReleasesDTO> results = releasesService.searchReleases(
-                releaseId,
-                releaseName,
-                releaseType,
-                releaseDate,
-                projectId
-        );
+        try {
+            // Check if no search parameters provided at all
+            if ((releaseId == null || releaseId.isBlank()) &&
+                    (releaseName == null || releaseName.isBlank()) &&
+                    (releaseType == null || releaseType.isBlank()) &&
+                    releaseDate == null &&
+                    projectId == null) {
 
-        return ResponseEntity.ok(
-                new StandardResponse("success", "Releases fetched", results, 200)
-        );
+                return ResponseEntity.badRequest().body(
+                        new StandardResponse("failure", "At least one search parameter is required", null, 400)
+                );
+            }
+
+            List<ReleasesDTO> results = releasesService.searchReleases(
+                    releaseId,
+                    releaseName,
+                    releaseType,
+                    releaseDate,
+                    projectId
+            );
+
+            if (results.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new StandardResponse("failure", "No releases found matching criteria", null, 400)
+                );
+            }
+
+            return ResponseEntity.ok(
+                    new StandardResponse("success", "Releases fetched", results, 200)
+            );
+
+        } catch (Exception e) {
+            logger.error("Error searching releases", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+                    new StandardResponse("error", "Failed to fetch releases: " + e.getMessage(), null, 400)
+            );
+        }
     }
-
 
     @GetMapping("/releaseId/{releaseId}")
     public ResponseEntity<ReleasesDTO.ApiResponse> getReleaseByReleaseId(@PathVariable String releaseId) {
@@ -148,7 +173,4 @@ public class ReleasesController {
             );
         }
     }
-
-
-
 }

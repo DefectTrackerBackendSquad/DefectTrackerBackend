@@ -1,22 +1,17 @@
 package com.defect.defectTracker.dto;
 
-import lombok.AllArgsConstructor;
-
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import com.defect.defectTracker.entity.*;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.util.Date;
+
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DefectDto {
     private Long id;
     private String title;
     private String status;
     private Long severityId;
-    private LocalDateTime createdDate;
+    private Date createdDate;
     private Long projectId;
     private Long assignedToId;  // Developer who is assigned to fix
     private Long assignedById;  // Person who assigned the defect
@@ -45,4 +40,6 @@ public class DefectDto {
 
     private String assignName;
 
+    private String defectTitle;
+    private String descriptions;
 }

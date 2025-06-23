@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.print.attribute.standard.Media;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 @Entity
@@ -12,15 +13,11 @@ public class Defect {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String defectId;
-
     private String description;
     private int reOpenCount;
     private String attachment;
     private String steps;
-
-
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "release_test_case_id")
@@ -53,6 +50,4 @@ public class Defect {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type defectType;
-
-
 }
