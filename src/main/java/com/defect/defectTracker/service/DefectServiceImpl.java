@@ -1,8 +1,7 @@
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.DefectDTO;
+import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
-import com.defect.defectTracker.repository.DefectRepo;
 import com.defect.defectTracker.repository.DefectRepo;
 import com.defect.defectTracker.utils.StandardResponse;
 import jakarta.transaction.Transactional;
@@ -24,7 +23,7 @@ public class DefectServiceImpl implements DefectService {
     public DefectRepo defectRepo;
 
     @Override
-    public StandardResponse createDefect(DefectDTO dto) {
+    public StandardResponse createDefect(DefectDto dto) {
         // Check if defectId exists already
         String defectId = dto.getDefectId();
         if (defectId != null && !defectId.isBlank()) {
@@ -57,16 +56,16 @@ public class DefectServiceImpl implements DefectService {
         return new StandardResponse(
                 "success",
                 "Defect created successfully",
-                new DefectDTO(savedDefect),
+                new DefectDto(savedDefect),
                 HttpStatus.CREATED.value()
         );
     }
 
     @Override
-    public List<DefectDTO> getDefectsByAssignee(String userId) {
+    public List<DefectDto> getDefectsByAssignee(String userId) {
         return defectRepo.findByAssignedToId(userId)
                 .stream()
-                .map(DefectDTO::new)
+                .map(DefectDto::new)
                 .collect(Collectors.toList());
     }
 }

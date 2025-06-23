@@ -7,13 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Collection;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DefectDTO {
+public class DefectDto {
     private Long id; // DB Primary Key
 
     private String defectId;              // e.g., "DF00001"
@@ -51,7 +49,7 @@ public class DefectDTO {
     private String severityName;
 
     // Constructor for converting Entity → DTO
-    public DefectDTO(Defect defect) {
+    public DefectDto(Defect defect) {
         this.id = defect.getId();
         this.defectId = defect.getDefectId();
         this.title = defect.getTitle();
@@ -62,7 +60,7 @@ public class DefectDTO {
     }
 
     // Optional copy constructor
-    public DefectDTO(DefectDTO defectDTO) {
+    public DefectDto(DefectDto defectDTO) {
         this.id = defectDTO.getId();
         this.defectId = defectDTO.getDefectId();
         this.title = defectDTO.getTitle();
