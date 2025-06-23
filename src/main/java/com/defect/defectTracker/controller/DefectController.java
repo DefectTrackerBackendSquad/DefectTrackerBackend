@@ -3,76 +3,127 @@ package com.defect.defectTracker.controller;
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.defect.defectTracker.utils.StandardResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/defect")
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class DefectController {
+    @Autowired
+    private DefectService DefectService;
 
-    private final DefectService defectService;  // Injected service layer dependency
+    @GetMapping("/{id}")
+    public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
+        Defect defect = DefectService.getDefectByDefectId(id);
+        if (defect != null) {
+            return ResponseEntity.ok(
+                    new StandardResponse("Success", "Retrieved successfully", defect, 200)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new StandardResponse("Error", "Defect not found", null, 404));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Object> getDefectsByFlexibleFilters(
+            @RequestParam(required = false) Long statusId,
+            @RequestParam(required = false) Long severityId,
+            @RequestParam(required = false) Long priorityId,
+            @RequestParam(required = false) Long typeId,
+            @RequestParam Long projectId) {
+        try {
+            StandardResponse response = DefectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new java.util.HashMap<String, Object>() {{
+                        put("status", "Failure");
+                        put("message", "Bad Request");
+                        put("statusCode", 4000);
+                    }}
+            );
+        }
+    }
+
+    @GetMapping("/assignee/{userId}")
+    public ResponseEntity<List<Defect>> getDefectsByAssignee(@PathVariable Long userId) {
+        List<Defect> defects = DefectService.getDefectsByAssignee(userId);
+        return ResponseEntity.ok(defects);
+    }
 
     @PutMapping
-    public ResponseEntity<SimpleResponse> updateDefect(@RequestBody DefectDto defectDTO) {
-        // Validate that the defect ID is provided
-        if (defectDTO.getDefectId() == null || defectDTO.getDefectId().isEmpty()) {
+    public ResponseEntity<StandardResponse> updateDefect(@RequestBody DefectDto defectDTO) {
+        // Validate defect ID
+        if (defectDTO.getDefectId() == null || defectDTO.getDefectId().trim().isEmpty()) {
             return ResponseEntity
-                    .badRequest()
-                    .body(new SimpleResponse(
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new StandardResponse(
                             "error",
-                            "4001",
-                            "Defect ID is required."
+                            "Defect ID is required",
+                            null,
+                            HttpStatus.BAD_REQUEST.value()
                     ));
         }
 
-        // Attempt to retrieve existing defect from database via service
-        Defect existing = defectService.getDefectByDefectId(defectDTO.getDefectId());
+        // Validate description
+        if (defectDTO.getDescription() == null || defectDTO.getDescription().trim().isEmpty()) {
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new StandardResponse(
+                            "error",
+                            "Description cannot be null or empty",
+                            null,
+                            HttpStatus.BAD_REQUEST.value()
+                    ));
+        }
+
+        // Get existing defect
+        Defect existing = DefectService.getDefectByDefectId(defectDTO.getDefectId());
         if (existing == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
-                    .body(new SimpleResponse(
+                    .body(new StandardResponse(
                             "error",
-                            "4002",
-                            "Defect not found."
+                            "Defect not found",
+                            null,
+                            HttpStatus.NOT_FOUND.value()
                     ));
         }
 
-        // Update mutable fields on the existing entity using data from DTO
+        // Update simple fields
         existing.setDescription(defectDTO.getDescription());
         existing.setSteps(defectDTO.getSteps());
-        // Map other updatable fields here as needed (e.g., status, priority)
+        existing.setReOpenCount(defectDTO.getReOpenCount());
+        existing.setAttachment(defectDTO.getAttachment());
 
-        // Call service to persist changes
-        Defect updated = defectService.updateDefect(existing);
-        if (updated == null) {
+        try {
+            Defect updated = DefectService.updateDefect(existing);
+            return ResponseEntity
+                    .ok(new StandardResponse(
+                            "success",
+                            "Defect updated successfully",
+                            updated,
+                            HttpStatus.OK.value()
+                    ));
+        } catch (Exception e) {
             return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new SimpleResponse(
+                    .body(new StandardResponse(
                             "error",
-                            "5001",
-                            "Update failed."
+                            "Failed to update defect: " + e.getMessage(),
+                            null,
+                            HttpStatus.INTERNAL_SERVER_ERROR.value()
                     ));
         }
+    }}
 
-        // Return successful response
-        return ResponseEntity
-                .ok(new SimpleResponse(
-                        "success",
-                        "2001",
-                        "Updated successfully."
-                ));
-    }
 
-    // DTO for uniform response, using Lombok to generate getters, setters & constructors
-    @Data @NoArgsConstructor @AllArgsConstructor
-    private static class SimpleResponse {
-        private String status;
-        private String statusCode;
-        private String message;
-    }
-}
+
+
