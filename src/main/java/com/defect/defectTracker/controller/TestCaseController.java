@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/testcases")
+@RequestMapping("/api/v1/testcase")
 @CrossOrigin
 @RequiredArgsConstructor
 public class TestCaseController {
