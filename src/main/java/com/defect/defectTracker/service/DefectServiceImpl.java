@@ -52,7 +52,7 @@ public class DefectServiceImpl implements DefectService {
         dto.setStatus(defect.getDefectStatus() != null ? defect.getDefectStatus().getDefectStatusName() : null);
         dto.setSeverityId(defect.getSeverity() != null ? defect.getSeverity().getId() : null);
         dto.setSeverity(defect.getSeverity() != null ? defect.getSeverity() : null);
-        dto.setCreatedDate(defect.getCreatedDate());
+       // dto.setCreatedDate(defect.getcreatedDate());
         dto.setProjectId(defect.getProject() != null ? (defect.getProject().getId()) : null);
         dto.setAssignedToId(defect.getAssignedTo() != null ? defect.getAssignedTo().getId() : null);
         dto.setAssignedById(defect.getAssignedBy() != null ? defect.getAssignedBy().getId() : null);

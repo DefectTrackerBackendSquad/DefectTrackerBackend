@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DefectController {
     @Autowired
-    private DefectService defectService;
     private DefectService DefectService;
 
     @GetMapping("/{id}")
@@ -40,7 +39,7 @@ public class DefectController {
             @RequestParam(required = false) Long typeId,
             @RequestParam Long projectId) {
         try {
-            StandardResponse response = defectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
+            StandardResponse response = DefectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
