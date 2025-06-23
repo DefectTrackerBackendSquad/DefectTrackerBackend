@@ -14,7 +14,7 @@ public class Comments {
 
     private String comment;
 
-    private Media attachment;
+    private String attachment;
 
     @ManyToOne(fetch = FetchType.LAZY , cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")

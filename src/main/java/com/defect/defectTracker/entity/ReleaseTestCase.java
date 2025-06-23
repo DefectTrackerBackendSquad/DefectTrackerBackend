@@ -30,8 +30,9 @@ public class ReleaseTestCase {
     @JoinColumn(name = "test_case_id")
     private TestCase testCase;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "release_id")
     private Releases releases;
+
 
 }
