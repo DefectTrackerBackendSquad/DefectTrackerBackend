@@ -17,7 +17,7 @@ public class DefectStatusServiceImpl implements DefectStatusService {
 
     @Autowired
     private DefectStatusRepo defectStatusRepo;
-    private DefectStatusRepo defectStatusRepository;
+
 
     @Override
     public StandardResponse deleteDefectStatus(Long defectStatusId) {
@@ -31,6 +31,9 @@ public class DefectStatusServiceImpl implements DefectStatusService {
             }
         } else {
             return new StandardResponse("failure", "Id not exist.", null, 10009);
+        }
+    }
+
     public DefectStatusDTO createDefectStatus(DefectStatusDTO dto) {
         DefectStatusDTO response = new DefectStatusDTO();
 
@@ -54,7 +57,7 @@ public class DefectStatusServiceImpl implements DefectStatusService {
             return response;
         }
 
-        if (defectStatusRepository
+        if (defectStatusRepo
                 .findByDefectStatusNameIgnoreCase(trimmedStatus) != null) {
             response.setStatus("error");
             response.setStatusCode("4000");
@@ -65,7 +68,7 @@ public class DefectStatusServiceImpl implements DefectStatusService {
         try {
             DefectStatus newStatus = new DefectStatus();
             newStatus.setDefectStatusName(trimmedStatus);
-            defectStatusRepository.save(newStatus);
+            defectStatusRepo.save(newStatus);
 
             response.setStatus("success");
             response.setStatusCode("2001");
