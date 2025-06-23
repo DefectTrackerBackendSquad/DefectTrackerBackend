@@ -40,7 +40,7 @@ public class TestCaseController {
                     .body(new StandardResponse("failure", e.getMessage(), null,4000));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new StandardResponse("failure",  "Internal server error. Unable to delete test case.", null,5000));
+                    .body(new StandardResponse("failure",  "Unable to delete test case.", null,4000));
         }
     }
 
