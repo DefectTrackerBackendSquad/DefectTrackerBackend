@@ -1,5 +1,6 @@
 package com.defect.defectTracker.service;
 
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
@@ -16,6 +17,8 @@ import com.defect.defectTracker.repository.TestCaseRepo;
 import com.defect.defectTracker.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -74,8 +77,9 @@ public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
 
         Optional<ReleaseTestCase> optional = releaseTestCaseRepo.findById(id);
         if (optional.isEmpty()) {
-            throw new ReleaseTestCaseNotFoundException(4000, "releaseTestCaseId not found");
+            throw new ReleaseTestCaseNotFoundException( "releaseTestCaseId not found");
         }
+
         ReleaseTestCase rtc = optional.get();
         rtc.setReleaseTestCaseId(dto.getReleaseTestCaseId());
         rtc.setTestDate(dto.getTestDate());
