@@ -1,13 +1,17 @@
 package com.defect.defectTracker.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class DefectStatusDto {
-    @NotBlank(message = "Data cannot be null or empty")
-    @Pattern(regexp = "^[a-zA-Z][a-zA-Z ]*$",
-            message = "Invalid Data Type")
-    private String defectStatusName;
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class DefectStatusDTO {
+    private String status;
+    private String statusCode;
+    private String message;
+    private String defectStatus; // include the input field
 }
