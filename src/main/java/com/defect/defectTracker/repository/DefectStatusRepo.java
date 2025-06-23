@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 @Transactional
 @Repository
 public interface DefectStatusRepo extends JpaRepository<DefectStatus, Long> {
-
+    boolean existsByDefectStatusNameIgnoreCase(String defectStatusName);
     //void deleteDefectStatus (Long defectStatusId);
 }
 

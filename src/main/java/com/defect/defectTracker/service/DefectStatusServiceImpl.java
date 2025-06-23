@@ -57,8 +57,7 @@ public class DefectStatusServiceImpl implements DefectStatusService {
             return response;
         }
 
-        if (defectStatusRepo
-                .findByDefectStatusNameIgnoreCase(trimmedStatus) != null) {
+        if (defectStatusRepo.existsByDefectStatusNameIgnoreCase(trimmedStatus)) {
             response.setStatus("error");
             response.setStatusCode("4000");
             response.setMessage("Status Already Exist.");
