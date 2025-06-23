@@ -1,14 +1,28 @@
 package com.defect.defectTracker.exceptionHandler;
 
 import com.defect.defectTracker.utils.Constants;
+import com.defect.defectTracker.utils.StandardResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import java.sql.SQLException;
 
-public class GlobalExceptionHandler extends RuntimeException {
-    public GlobalExceptionHandler(String message) {
-        super(message);
+@ControllerAdvice
+public class GlobalExceptionHandler {
+    Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(HttpMessageNotWritableException.class)
+    public ResponseEntity<String> customException(HttpMessageNotWritableException e) {
+        logger.info("No relevant foreign data there");
+        return ResponseEntity.ok("Data Not Found");
+
     }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
@@ -30,6 +44,5 @@ public class GlobalExceptionHandler extends RuntimeException {
                         ex.getMessage(),
                         null));
     }
-
-
 }
+

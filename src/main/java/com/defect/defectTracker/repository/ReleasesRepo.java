@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ReleasesRepo extends JpaRepository<Releases, Long> {
-
+public interface ReleasesRepo extends JpaRepository<Releases, String> {
+    boolean existsByReleaseId(String releaseId);
     @Query("SELECT r FROM Releases r WHERE " +
             "(:releaseId IS NULL OR r.releaseId = :releaseId) AND " +
             "(:releaseName IS NULL OR r.releaseName LIKE %:releaseName%) AND " +
