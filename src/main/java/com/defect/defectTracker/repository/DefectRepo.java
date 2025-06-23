@@ -1,31 +1,70 @@
 package com.defect.defectTracker.repository;
 
 import com.defect.defectTracker.entity.Defect;
-import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
-import java.util.Optional;
-@Transactional
-@Repository
+
 public interface DefectRepo extends JpaRepository<Defect, Long> {
 
-    @Query(value = "SELECT * FROM defect WHERE (:statusId IS NULL OR defect_status_id = :statusId) AND (:severityId IS NULL OR severity_id = :severityId) AND (:priorityId IS NULL OR priority_id = :priorityId) AND (:typeId IS NULL OR type_id = :typeId) AND project_id = :projectId", nativeQuery = true)
-    List<Defect> findWithAllFilters(@Param("statusId") Long statusId,
-                                    @Param("severityId") Long severityId,
-                                    @Param("priorityId") Long priorityId,
-                                    @Param("typeId") Long typeId,
-                                    @Param("projectId") Long projectId);
+    // CREATE operations are inherited from JpaRepository (save(), saveAll())
+
+    // READ operations
     @Query("SELECT d FROM Defect d " +
             "LEFT JOIN FETCH d.assignedTo " +
             "LEFT JOIN FETCH d.project " +
             "LEFT JOIN FETCH d.defectStatus " +
-            "WHERE d.assignedBy.id = :userId")
-    List<Defect> findByAssignedById(@Param("userId") Long userId);
-    Defect findByDefectId(String defectId);
-    List<Defect> findAll();
-}
+            "WHERE d.assignedTo.id = :userId")
+    List<Defect> findByAssignedToId(@Param("userId") String userId);
 
+    Defect findByDefectId(String defectId);
+
+    Long countByDefectIdStartingWith(String prefix);
+
+    @Query("SELECT d FROM Defect d " +
+            "LEFT JOIN FETCH d.assignedTo " +
+            "LEFT JOIN FETCH d.assignedBy " +
+            "LEFT JOIN FETCH d.project " +
+            "LEFT JOIN FETCH d.defectStatus " +
+            "LEFT JOIN FETCH d.severity " +
+            "LEFT JOIN FETCH d.priority " +
+            "LEFT JOIN FETCH d.defectType " +
+            "LEFT JOIN FETCH d.releaseTestCase")
+    List<Defect> findAllWithRelationships();
+
+    @Query("SELECT d FROM Defect d JOIN FETCH d.assignedBy WHERE d.assignedBy.id = :userId")
+    List<Defect> findByAssignedById(@Param("userId") String userId);
+
+    // Find by assignedBy (userId)
+    List<Defect> findByAssignedBy_UserId(String userId);
+
+    // UPDATE operations
+    @Transactional
+    @Modifying
+    @Query("UPDATE Defect d SET " +
+            "d.description = :description, " +
+            "d.steps = :steps, " +
+            "d.attachment = :attachment, " +
+            "d.defectStatus = :statusId " +
+            "WHERE d.defectId = :defectId")
+    int updateDefect(@Param("defectId") String defectId,
+                     @Param("description") String description,
+                     @Param("steps") String steps,
+                     @Param("attachment") String attachment,
+                     @Param("statusId") Long statusId);
+
+    // Custom save operation for defect creation
+    @Transactional
+    default Defect createDefect(Defect defect) {
+        // Generate defect ID if not set
+        if (defect.getDefectId() == null) {
+            Long count = countByDefectIdStartingWith("DF");
+            String newDefectId = String.format("DF%05d", count + 1);
+            defect.setDefectId(newDefectId);
+        }
+        return save(defect);
+    }
+}

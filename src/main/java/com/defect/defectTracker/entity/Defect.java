@@ -19,6 +19,7 @@ public class Defect {
     private int reOpenCount;
     private String attachment;
     private String steps;
+    private String title;
 
 
 
