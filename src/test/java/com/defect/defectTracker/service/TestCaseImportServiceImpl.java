@@ -18,6 +18,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 @Service
+@RequiredArgsConstructor
 @Transactional
 public class TestCaseImportServiceImpl implements TestCaseImportService {
 
@@ -30,15 +31,6 @@ public class TestCaseImportServiceImpl implements TestCaseImportService {
     private final ProjectRepo projectRepo;
     private final SeverityRepo severityRepo;
     private final TypeRepo typeRepo;
-
-    public TestCaseImportServiceImpl(TestCaseRepo testCaseRepo, SubModuleRepo subModuleRepo, ModuleRepo moduleRepo, ProjectRepo projectRepo, SeverityRepo severityRepo, TypeRepo typeRepo) {
-        this.testCaseRepo = testCaseRepo;
-        this.subModuleRepo = subModuleRepo;
-        this.moduleRepo = moduleRepo;
-        this.projectRepo = projectRepo;
-        this.severityRepo = severityRepo;
-        this.typeRepo = typeRepo;
-    }
 
     @Transactional
     public void importTestCasesFromCsv(MultipartFile file) throws IOException {
