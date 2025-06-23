@@ -5,6 +5,9 @@ package com.defect.defectTracker.service;
 //import org.springframework.beans.factory.annotation.Autowired;
 
 import com.defect.defectTracker.dto.TestCaseDto;
+import com.defect.defectTracker.dto.TestCaseDto;
+public interface TestCaseService {
+    TestCaseDto deleteByTestCaseId(String testCaseId);
 import com.defect.defectTracker.entity.TestCase;
 import org.springframework.stereotype.Service;
 

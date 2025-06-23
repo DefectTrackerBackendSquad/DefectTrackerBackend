@@ -128,6 +128,38 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.TestCaseDto;
+import com.defect.defectTracker.service.TestCaseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/v1/testcases")
+public class TestCaseController {
+
+    @Autowired
+    private TestCaseService service;
+
+    @DeleteMapping("/delete/{testCaseId}")
+    public ResponseEntity<?> deleteByTestCaseId(@PathVariable String testCaseId) {
+        try {
+            service.deleteByTestCaseId(testCaseId); // Just call service, don't return dto
+
+            return ResponseEntity.ok(Map.of("message", "Test case deleted successfully."));
+
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            e.printStackTrace(); // Optional: useful during debugging
+            return ResponseEntity.status(500).body(Map.of("error", "Internal server error. Unable to delete test case."));
+        }
+    }
+
+}
+import com.defect.defectTracker.dto.TestCaseDto;
 import com.defect.defectTracker.entity.TestCase;
 import com.defect.defectTracker.service.TestCaseImportService;
 import com.defect.defectTracker.service.TestCaseService;
@@ -151,7 +183,7 @@ import java.util.List;
 @CrossOrigin
 public class TestCaseController {
 
-    Logger logger = LoggerFactory.getLogger("TestCaseController.class");
+    Logger logger = LoggerFactory.getLogger(TestCaseController.class);
 
     @Autowired
     private TestCaseService testCaseService;
@@ -188,6 +220,18 @@ public class TestCaseController {
                             put("result",null);
                         }});
             }
+import com.defect.defectTracker.dto.TestCaseDto;
+import com.defect.defectTracker.service.TestCaseImportService;
+import com.defect.defectTracker.service.TestCaseService;
+import com.defect.defectTracker.utils.StandardResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import java.io.IOException;
+import java.util.List;
 
             // Map fields to required string format
             List<java.util.Map<String, Object>> result = testCases.stream().map(tc -> {
