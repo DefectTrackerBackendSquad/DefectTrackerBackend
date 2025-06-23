@@ -34,13 +34,13 @@ public class TestCaseController {
     public ResponseEntity<StandardResponse> deleteByTestCaseId(@PathVariable String testCaseId) {
         try {
             testCaseService.deleteByTestCaseId(testCaseId);
-            return ResponseEntity.ok(new StandardResponse("success", 2000, "Test case deleted successfully.", null));
+            return ResponseEntity.ok(new StandardResponse("success",  "Test case deleted successfully.", null,2000));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(new StandardResponse("failure", 4004, e.getMessage(), null));
+                    .body(new StandardResponse("failure", e.getMessage(), null,4000));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new StandardResponse("failure", 5000, "Internal server error. Unable to delete test case.", null));
+                    .body(new StandardResponse("failure",  "Internal server error. Unable to delete test case.", null,5000));
         }
     }
 
@@ -48,8 +48,7 @@ public class TestCaseController {
     public ResponseEntity<StandardResponse> getTestCasesByModuleId(@PathVariable Long moduleId) {
         List<TestCase> testCases = testCaseService.getTestCasesByModuleId(moduleId);
         return ResponseEntity.ok(
-                new StandardResponse("success", 2000, "Retrieved successfully",
-                        (testCases == null || testCases.isEmpty()) ? null : testCases)
+                new StandardResponse("success",  "Retrieved successfully",testCases,2000)
         );
     }
 
@@ -58,19 +57,19 @@ public class TestCaseController {
         List<TestCaseDto> testCases = testCaseService.getTestCasesBySubModuleId(subModuleId);
         if (testCases == null || testCases.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new StandardResponse("failure", 4000, "Data not found", null));
+                    .body(new StandardResponse("failure",  "Data not found", null,4000));
         }
-        return ResponseEntity.ok(new StandardResponse("success", 2000, "Retrieved Successfully!", testCases));
+        return ResponseEntity.ok(new StandardResponse("success", "Retrieved Successfully!", testCases, 2000));
     }
 
     @PostMapping("/import")
     public ResponseEntity<StandardResponse> importTestCases(@RequestParam("file") MultipartFile file) {
         try {
             importService.importTestCasesFromCsv(file);
-            return ResponseEntity.ok(new StandardResponse("success", 2000, "Import Successful", null));
+            return ResponseEntity.ok(new StandardResponse("success", "Import Successful", null, 2000));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new StandardResponse("failure", 5000, "Failed to import: " + e.getMessage(), null));
+                    .body(new StandardResponse("failure", "Failed to import: " + e.getMessage(), null, 5000));
         }
     }
 
@@ -86,25 +85,25 @@ public class TestCaseController {
                 dto.getTypeId() == null ||
                 dto.getProjectId() == null || dto.getProjectId().trim().isEmpty()) {
             return ResponseEntity.badRequest()
-                    .body(new StandardResponse("failure", 4000, "Missing required fields", null));
+                    .body(new StandardResponse("failure", "Missing required fields", null, 4000));
         }
 
         if (testCaseService.testCaseExists(dto.getTestCaseId())) {
             return ResponseEntity.badRequest()
-                    .body(new StandardResponse("failure", 4000, "TestCase already exists", null));
+                    .body(new StandardResponse("failure", "TestCase already exists", null, 4000));
         }
 
         try {
             TestCaseDto saved = testCaseService.createTestCase(dto);
             if (saved == null) {
                 return ResponseEntity.badRequest()
-                        .body(new StandardResponse("failure", 4000, "Save Failed", null));
+                        .body(new StandardResponse("failure", "Save Failed", null, 4000));
             }
             return ResponseEntity.status(HttpStatus.CREATED)
-                    .body(new StandardResponse("success", 2000, "Saved Successfully.", saved));
+                    .body(new StandardResponse("success", "Saved Successfully.", saved, 2000));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
-                    .body(new StandardResponse("failure", 4000, "Save Failed", null));
+                    .body(new StandardResponse("failure", "Save Failed", null, 4000));
         }
     }
 
@@ -117,14 +116,14 @@ public class TestCaseController {
 
             if (testCases.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(new StandardResponse("failure", 4000, "Data not found", null));
+                        .body(new StandardResponse("failure", "Data not found", null, 4000));
             }
 
             return ResponseEntity.ok()
-                    .body(new StandardResponse("success", 2000, "Retrieved Successfully", testCases));
+                    .body(new StandardResponse("success", "Retrieved Successfully", testCases, 2000));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new StandardResponse("failure", 4000, "Retrieve failed", null));
+                    .body(new StandardResponse("failure", "Retrieve failed", null, 4000));
         }
     }
 }

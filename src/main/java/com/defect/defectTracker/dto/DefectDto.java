@@ -1,8 +1,9 @@
 package com.defect.defectTracker.dto;
 
+import com.defect.defectTracker.entity.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+
+import java.util.Date;
 
 @Data
 public class DefectDto {
@@ -10,7 +11,7 @@ public class DefectDto {
     private String title;
     private String status;
     private Long severityId;
-    private LocalDateTime createdDate;
+    private Date createdDate;
     private Long projectId;
     private Long assignedToId;  // Developer who is assigned to fix
     private Long assignedById;  // Person who assigned the defect
@@ -39,11 +40,6 @@ public class DefectDto {
 
     private String assignName;
 
-    private String id;
-    private String defectId;
     private String defectTitle;
     private String descriptions;
-    private String releaseTestCaseId;
-    private String severity;
-    private String defectStatus;
 }

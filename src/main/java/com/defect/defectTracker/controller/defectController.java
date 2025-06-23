@@ -1,12 +1,11 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.DefectDto;
-import com.defect.defectTracker.exceptionHandler.GlobalExceptionHandler;
+import com.defect.defectTracker.entity.Defect;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +17,13 @@ import java.util.List;
 @RequestMapping("/api/v1/defect")
 @AllArgsConstructor
 @RequiredArgsConstructor
-public class DefectController {
+public class defectController {
     @Autowired
     private DefectService defectService;
-    @Autowired
-    private DefectService DefectService;
 
     @GetMapping("/{id}")
     public ResponseEntity<StandardResponse> getDefectByDefectId(@PathVariable String id) {
-        Defect defect = DefectService.getDefectByDefectId(id);
+        Defect defect = defectService.getDefectByDefectId(id);
         if (defect != null) {
             return ResponseEntity.ok(
                     new StandardResponse("Success", "Retrieved successfully", defect, 200)
@@ -36,12 +33,6 @@ public class DefectController {
                 .body(new StandardResponse("Error", "Defect not found", null, 404));
     }
 
-    @GetMapping("/testcase/{testcaseId}")
-    public ResponseEntity<StandardResponse> getDefectByTestcaseId(@PathVariable String testcaseId) {
-        DefectDto dto = defectService.getDefectByTestcaseId(testcaseId);
-        return ResponseEntity.ok(new StandardResponse("Success", 2000, "Retrieved Successfully", dto));
-    }
-}
     @GetMapping("/filter")
     public ResponseEntity<Object> getDefectsByFlexibleFilters(
             @RequestParam(required = false) Long statusId,
@@ -50,7 +41,7 @@ public class DefectController {
             @RequestParam(required = false) Long typeId,
             @RequestParam Long projectId) {
         try {
-            StandardResponse response = DefectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
+            StandardResponse response = defectService.getDefectsByFlexibleFilters(statusId, severityId, priorityId, typeId, projectId);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
@@ -65,7 +56,7 @@ public class DefectController {
 
     @GetMapping("/assignee/{userId}")
     public ResponseEntity<List<Defect>> getDefectsByAssignee(@PathVariable Long userId) {
-        List<Defect> defects = DefectService.getDefectsByAssignee(userId);
+        List<Defect> defects = defectService.getDefectsByAssignee(userId);
         return ResponseEntity.ok(defects);
     }
 
@@ -96,7 +87,7 @@ public class DefectController {
         }
 
         // Get existing defect
-        Defect existing = DefectService.getDefectByDefectId(defectDTO.getDefectId());
+        Defect existing = defectService.getDefectByDefectId(defectDTO.getDefectId());
         if (existing == null) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -115,7 +106,7 @@ public class DefectController {
         existing.setAttachment(defectDTO.getAttachment());
 
         try {
-            Defect updated = DefectService.updateDefect(existing);
+            Defect updated = defectService.updateDefect(existing);
             return ResponseEntity
                     .ok(new StandardResponse(
                             "success",
@@ -134,6 +125,7 @@ public class DefectController {
                     ));
         }
     }
+}
 
 
 

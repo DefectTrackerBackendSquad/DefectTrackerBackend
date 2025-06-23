@@ -1,6 +1,7 @@
 package com.defect.defectTracker.service;
 
 import com.defect.defectTracker.dto.TestCaseDto;
+import com.defect.defectTracker.entity.Modules;
 import com.defect.defectTracker.entity.TestCase;
 import com.defect.defectTracker.repository.TestCaseRepo;
 import com.defect.defectTracker.service.TestCaseService;
@@ -104,7 +105,7 @@ public class TestCaseServiceImpl implements TestCaseService {
             testCase.setSubModule(subModuleRepo.findBySubModuleId(dto.getSubModuleId()).orElse(null));
         }
         if (dto.getModuleId() != null) {
-            testCase.setModules(moduleRepo.findByModuleId(dto.getModuleId()).orElse(null));
+            testCase.setModules((Modules) moduleRepo.findByModuleId(dto.getModuleId()).orElse(null));
         }
         if (dto.getProjectId() != null) {
             testCase.setProject(projectRepo.findByProjectId(dto.getProjectId()).orElse(null));
