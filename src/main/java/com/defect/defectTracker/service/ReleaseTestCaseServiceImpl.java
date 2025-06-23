@@ -1,48 +1,24 @@
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.TestCaseResponseDTO;
+import com.defect.defectTracker.dto.ReleaseTestCaseDto;
 import com.defect.defectTracker.entity.ReleaseTestCase;
-import com.defect.defectTracker.repository.ReleaseTestCaseRepo;
-import com.defect.defectTracker.service.ReleaseTestCaseService;
-import jakarta.transaction.Transactional;
+import com.defect.defectTracker.repository.ReleaseTestCaseRepository;
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.defect.defectTracker.dto.ReleaseTestCaseDto;
-import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 
-import java.time.format.DateTimeFormatter;
-import java.util.NoSuchElementException;
+import java.util.List;
 
 @Service
-@Transactional
 public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
 
+    private final ReleaseTestCaseRepository releaseTestCaseRepository;
+
     @Autowired
-    private ReleaseTestCaseRepo releaseTestCaseRepo;
-
-    @Override
-    public TestCaseResponseDTO getTestCaseByReleaseTestCaseId(String releaseTestCaseId) {
-        ReleaseTestCase rtc = releaseTestCaseRepo.findByReleaseTestCaseId(releaseTestCaseId)
-                .orElseThrow(() -> new NoSuchElementException("Data not found"));
-
-        TestCaseResponseDTO dto = new TestCaseResponseDTO();
-        dto.setReleasedTestcaseId(rtc.getReleaseTestCaseId());
-        dto.setTestcaseId(rtc.getTestCase().getTestCaseId());
-        dto.setTestcase(rtc.getTestCase().getDescription());
-        dto.setDescription(rtc.getTestCase().getDescription());
-        dto.setReleaseId(rtc.getReleases().getReleaseId());
-        dto.setTestDate(rtc.getTestDate().toString());
-        dto.setTestTime(rtc.getTestTime().toString().substring(0, 5));
-        dto.setSeverityId(rtc.getTestCase().getSeverity().getId().toString());
-        dto.setSeverity(rtc.getTestCase().getSeverity().getSeverityName());
-        dto.setSteps(rtc.getTestCase().getSteps());
-        dto.setTypeId(rtc.getTestCase().getType().getId().toString());
-        dto.setType(rtc.getTestCase().getType().getTypeName());
-        dto.setTestcaseStatus("Passed".equalsIgnoreCase(rtc.getTestCaseStatus()) ? 1 : 0);
-
-        return dto;
+    public ReleaseTestCaseServiceImpl(ReleaseTestCaseRepository releaseTestCaseRepository) {
+        this.releaseTestCaseRepository = releaseTestCaseRepository;
     }
-  
+
     @Override
     public Object deleteReleaseTestCase(String releaseTestCaseId) {
         // Find the ReleaseTestCase by its ID

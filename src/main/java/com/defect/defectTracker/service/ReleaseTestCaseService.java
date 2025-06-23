@@ -1,7 +1,5 @@
 package com.defect.defectTracker.service;
 
-
-import com.defect.defectTracker.dto.TestCaseResponseDTO;
 import com.defect.defectTracker.entity.ReleaseTestCase;
 import com.defect.defectTracker.repository.ReleaseTestCaseRepository;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
@@ -10,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import com.defect.defectTracker.utils.ErrorResponse;
 
+@Service
 public interface ReleaseTestCaseService {
-    TestCaseResponseDTO getTestCaseByReleaseTestCaseId(String releaseTestCaseId);
-  
+
     public final ReleaseTestCaseRepository releaseTestCaseRepository = null;
 
     @Transactional
@@ -43,4 +41,6 @@ public interface ReleaseTestCaseService {
 
         return response;
     }
+
+    // Additional helper methods can be added below
 }
