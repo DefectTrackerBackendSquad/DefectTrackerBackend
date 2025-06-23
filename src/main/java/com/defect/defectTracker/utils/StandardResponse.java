@@ -1,5 +1,6 @@
 package com.defect.defectTracker.utils;
 
+import com.defect.defectTracker.dto.DefectDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
