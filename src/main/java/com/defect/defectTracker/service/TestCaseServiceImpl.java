@@ -23,6 +23,11 @@ import java.util.stream.Collectors;
 @Service
 public class TestCaseServiceImpl implements TestCaseService {
     @Override
+    public TestCaseDto deleteByTestCaseId(String testCaseId) {
+        return null;
+    }
+
+    @Override
     public List<TestCase> getTestCasesByModuleId(Long moduleId) {
         return List.of();
     }
@@ -37,27 +42,17 @@ public class TestCaseServiceImpl implements TestCaseService {
         return List.of();
     }
 
-    @Transactional
-    public abstract class testcaseserviceimpl implements testCaseService {
-
-        Logger logger = Logger.getLogger(testcaseserviceimpl.class.getName());
-
-        @Autowired
-        private TestCaseRepo testCaseRepository;
-
-        public testcaseserviceimpl(TestCaseRepo testCaseRepository) {
-            this.testCaseRepository = testCaseRepository;
-        }
-
-        //@Override
-        public List<TestCase> getTestCasesByModuleId(Long moduleId) {
-            List<TestCase> testCases = testCaseRepository.findByModule_Id(moduleId);
-            logger.info(String.valueOf(testCases.size()));
-            return testCases;
-        }
+        Logger logger = Logger.getLogger(TestCaseServiceImpl.class.getName());
 
         @Autowired
         private TestCaseRepo testCaseRepo;
+
+        public testcaseserviceimpl(TestCaseRepo testCaseRepo) {
+            this.testCaseRepo = testCaseRepo;
+        }
+
+
+
 
         @Contract
         @Override
@@ -123,7 +118,7 @@ public class TestCaseServiceImpl implements TestCaseService {
 
         @Override
         public List<TestCaseDto> getTestCasesByProjectId(String projectId) {
-            List<TestCase> testCases = testCaseRepository.findByProjectProjectId(projectId);
+            List<TestCase> testCases = testCaseRepo.findByProjectProjectId(projectId);
 
             return testCases.stream().map(testCase -> {
                 TestCaseDto dto = new TestCaseDto();
