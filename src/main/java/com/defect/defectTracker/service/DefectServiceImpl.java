@@ -1,5 +1,5 @@
 package com.defect.defectTracker.service;
-import com.defect.defectTracker.exception.ResourceNotFoundException;
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.*;
 import com.defect.defectTracker.repository.DefectRepo;

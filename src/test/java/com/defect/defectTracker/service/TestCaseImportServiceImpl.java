@@ -18,7 +18,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
 public class TestCaseImportServiceImpl implements TestCaseImportService {
 
@@ -69,11 +68,11 @@ public class TestCaseImportServiceImpl implements TestCaseImportService {
                 testCase.setSteps(record.get("steps"));
 
                 testCase.setSubModule(subModuleRepo.findById(
-                        String.valueOf(Long.parseLong(record.get("sub_module_id")))).orElse(null));
+                        Long.valueOf(String.valueOf(Long.parseLong(record.get("sub_module_id"))))).orElse(null));
                 testCase.setModules(moduleRepo.findById(
                         String.valueOf(Long.parseLong(record.get("module_id")))).orElse(null));
                 testCase.setProject(projectRepo.findById(
-                        String.valueOf(Long.parseLong(record.get("project_id")))).orElse(null));
+                        Long.valueOf(String.valueOf(Long.parseLong(record.get("project_id"))))).orElse(null));
                 testCase.setSeverity(severityRepo.findById(
                         Long.parseLong(record.get("severity_id"))).orElse(null));
                 testCase.setType(typeRepo.findById(

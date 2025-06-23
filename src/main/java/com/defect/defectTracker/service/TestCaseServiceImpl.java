@@ -21,29 +21,15 @@ import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 @Data
-@Service
 @Transactional
-import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.entity.TestCase;
-import com.defect.defectTracker.repository.TestCaseRepo;
-import com.defect.defectTracker.service.TestCaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Service
 public class TestCaseServiceImpl implements TestCaseService {
-
-    Logger logger = Logger.getLogger(TestCaseServiceImpl.class.getName());
 
     @Autowired
     private TestCaseRepo testCaseRepository;
     @Override
     public List<TestCase> getTestCasesByModuleId(Long moduleId) {
         List<TestCase> testCases =  testCaseRepository.findByModules_Id(moduleId);
-        logger.info(String.valueOf(testCases.size()));
         return testCases;
     }
 
@@ -134,6 +120,26 @@ public class TestCaseServiceImpl implements TestCaseService {
         return mapToDto(saved);
     }
 
+
+    @Override
+    public List<TestCaseDto> getTestCasesByProjectId(String projectId) {
+        List<TestCase> testCases = testCaseRepository.findByProjectProjectId(projectId);
+
+        return testCases.stream().map(testCase -> {
+            TestCaseDto dto = new TestCaseDto();
+            dto.setId(testCase.getId());
+            dto.setDescription(testCase.getDescription());
+            dto.setSteps(testCase.getSteps());
+            dto.setTestCaseId(testCase.getTestCaseId());
+            dto.setModuleId(testCase.getModules().getModuleId());
+            dto.setProjectId(testCase.getProject().getProjectId());
+            dto.setSeverityId(testCase.getSeverity().getId());
+            dto.setSubModuleId(testCase.getSubModule().getSubModuleId());
+            dto.setTypeId(testCase.getType().getId());
+            return dto;
+        }).collect(Collectors.toList());
+    }
+
     private TestCaseDto mapToDto(TestCase testCase) {
         TestCaseDto dto = new TestCaseDto();
         dto.setTestCaseId(testCase.getTestCaseId());
@@ -165,28 +171,8 @@ public class TestCaseServiceImpl implements TestCaseService {
         if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$") || dto.getProjectId().length() != 6) {
             throw new IllegalArgumentException("projectId must be in format PR0001 and 6 characters.");
         }
-}
-}
-
-    @Autowired
-    private TestCaseRepo testCaseRepository;
-
-    @Override
-    public List<TestCaseDto> getTestCasesByProjectId(String projectId) {
-        List<TestCase> testCases = testCaseRepository.findByProjectProjectId(projectId);
-
-        return testCases.stream().map(testCase -> {
-            TestCaseDto dto = new TestCaseDto();
-            dto.setId(testCase.getId());
-            dto.setDescription(testCase.getDescription());
-            dto.setSteps(testCase.getSteps());
-            dto.setTestCaseId(testCase.getTestCaseId());
-            dto.setModuleId(testCase.getModule().getModuleId());
-            dto.setProjectId(testCase.getProject().getProjectId());
-            dto.setSeverityId(testCase.getSeverity().getId());
-            dto.setSubModuleId(testCase.getSubModule().getSubModuleId());
-            dto.setTypeId(testCase.getType().getId());
-            return dto;
-        }).collect(Collectors.toList());
     }
 }
+
+
+
