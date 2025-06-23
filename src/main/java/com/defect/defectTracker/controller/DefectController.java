@@ -1,9 +1,12 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.DefectDto;
+import com.defect.defectTracker.exceptionHandler.GlobalExceptionHandler;
 import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +14,14 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/defect")
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class DefectController {
+    @Autowired
+    private DefectService defectService;
 
+    @GetMapping("/testcase/{testcaseId}")
+    public ResponseEntity<StandardResponse> getDefectByTestcaseId(@PathVariable String testcaseId) {
+        DefectDto dto = defectService.getDefectByTestcaseId(testcaseId);
+        return ResponseEntity.ok(new StandardResponse("Success", 2000, "Retrieved Successfully", dto));
+    }
 }
