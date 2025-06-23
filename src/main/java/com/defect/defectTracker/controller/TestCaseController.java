@@ -30,8 +30,8 @@ public class TestCaseController {
     private TestCaseService testCaseService;
     private TestCaseImportService importService;
 
-    @DeleteMapping("/delete/{testCaseId}")
-    public ResponseEntity<?> deleteByTestCaseId(@PathVariable String testCaseId) {
+    @DeleteMapping("/{testCaseId}")
+    public ResponseEntity<StandardResponse> deleteByTestCaseId(@PathVariable String testCaseId) {
         try {
             testCaseService.deleteByTestCaseId(testCaseId);
             return ResponseEntity.ok(new StandardResponse("success", 2000, "Test case deleted successfully.", null));
@@ -44,7 +44,7 @@ public class TestCaseController {
         }
     }
 
-    @GetMapping("/module/{moduleId}")
+    @GetMapping("module/{moduleId}")
     public ResponseEntity<StandardResponse> getTestCasesByModuleId(@PathVariable Long moduleId) {
         List<TestCase> testCases = testCaseService.getTestCasesByModuleId(moduleId);
         return ResponseEntity.ok(
