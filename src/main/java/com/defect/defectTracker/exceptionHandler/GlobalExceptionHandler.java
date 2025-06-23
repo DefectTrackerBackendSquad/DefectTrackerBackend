@@ -1,12 +1,15 @@
 package com.defect.defectTracker.exceptionHandler;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -41,5 +44,5 @@ public class GlobalExceptionHandler {
         error.put("error", "Validation Failed");
         error.put("message", ex.getBindingResult().getFieldError().getDefaultMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-}
+
+}}

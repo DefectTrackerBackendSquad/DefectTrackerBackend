@@ -21,9 +21,6 @@ public class DefectStatusController {
         return service.updateDefectStatus(defectStatusId, dto);
     }
 
-    @Autowired
-    private DefectStatusService defectStatusService;
-
     @DeleteMapping("/defectStatus/{defectStatusId}")
     public ResponseEntity<StandardResponse> deleteDefectStatus(@PathVariable Long defectStatusId) {
         StandardResponse response = defectStatusService.deleteDefectStatus(defectStatusId);
@@ -33,4 +30,6 @@ public class DefectStatusController {
             return ResponseEntity.badRequest().body(response);
         }
     }
+
+
 }
