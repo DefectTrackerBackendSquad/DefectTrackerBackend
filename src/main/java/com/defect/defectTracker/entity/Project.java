@@ -4,7 +4,7 @@ package com.defect.defectTracker.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
