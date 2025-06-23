@@ -45,4 +45,4 @@ public class GlobalExceptionHandler {
         error.put("message", ex.getBindingResult().getFieldError().getDefaultMessage());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 
-}}
+    }}

@@ -23,7 +23,7 @@ public class DefectStatusController {
 
     @DeleteMapping("/defectStatus/{defectStatusId}")
     public ResponseEntity<StandardResponse> deleteDefectStatus(@PathVariable Long defectStatusId) {
-        StandardResponse response = defectStatusService.deleteDefectStatus(defectStatusId);
+        StandardResponse response = service.deleteDefectStatus(defectStatusId);
         if ("success".equalsIgnoreCase(response.getStatus())) {
             return ResponseEntity.ok(response);
         } else {
