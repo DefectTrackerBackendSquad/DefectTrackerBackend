@@ -15,7 +15,7 @@ public class UpdateTestCaseDto {
     private String testCase;
     private String subModuleId;
     private String description;
-    private String severityId;
+    private Long severityId;
     private String steps;
     private Long typeId;
     private String projectId;

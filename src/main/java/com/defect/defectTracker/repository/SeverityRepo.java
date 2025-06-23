@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface SeverityRepo extends JpaRepository<Severity, Long> {
 
     //  Find severity by its custom ID (e.g., "SEV001")
-    Optional<Severity> findBySeverityId(String severityId);
+    Optional<Severity> findBySeverityName(String SeverityName);
 }

@@ -18,6 +18,7 @@ public class TestCaseDto {
     private String moduleId;
     private String projectId;
     private Long severityId;
+    private String severityName;
     private Long typeId;
 
 }

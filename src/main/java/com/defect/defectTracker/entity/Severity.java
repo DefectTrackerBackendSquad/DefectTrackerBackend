@@ -15,11 +15,11 @@ public class Severity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // ✅ Internal primary key for database
 
-    @Column(name = "severity_id", unique = true, nullable = false)
-    private String severityId; // ✅ Business ID like "SEV-001"
+    //Column(name = "severity_id", unique = true, nullable = false)
+   // private String severityId; // ✅ Business ID like "SEV-001"
 
     private String severityName; // e.g., "Critical", "High", etc.
 
-    @OneToMany(mappedBy = "severity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TestCase> testCases; // Optional reverse mapping
+   // @OneToMany(mappedBy = "severity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //private List<TestCase> testCases; // Optional reverse mapping
 }

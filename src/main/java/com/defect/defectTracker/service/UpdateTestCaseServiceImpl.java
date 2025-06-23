@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor // Auto-generates constructor for all final fields
 public class UpdateTestCaseServiceImpl implements UpdateTestCaseService {
@@ -33,21 +35,21 @@ public class UpdateTestCaseServiceImpl implements UpdateTestCaseService {
                             "Test case not found with ID: " + testCaseId));
 
             //  Fetch all related entities
-            SubModule subModule = subModuleRepository.findBySubModuleId(dto.getSubModuleId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "SubModule not found with ID: " + dto.getSubModuleId()));
+      SubModule subModule = subModuleRepository.findBySubModuleId(dto.getSubModuleId())
+               .orElseThrow(() -> new ResourceNotFoundException(
+                        "SubModule not found with ID: " + dto.getSubModuleId()));
 
-            Project project = projectRepository.findByProjectId(dto.getProjectId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Project not found with ID: " + dto.getProjectId()));
+           Project project = projectRepository.findByProjectId(dto.getProjectId())
+                  .orElseThrow(() -> new ResourceNotFoundException(
+                       "Project not found with ID: " + dto.getProjectId()));
+            // Fetch Severity object (required for @ManyToOne)
+            Severity severity = severityRepository.findById(dto.getSeverityId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Severity not found with ID: " + dto.getSeverityId()));
+            testCase.setSeverity(severity);
 
-            Severity severity = severityRepository.findBySeverityId(dto.getSeverityId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Severity not found with ID: " + dto.getSeverityId()));
-
-            Type type = typeRepository.findById(dto.getTypeId())
-                    .orElseThrow(() -> new ResourceNotFoundException(
-                            "Type not found with ID: " + dto.getTypeId()));
+          Type type = typeRepository.findById(dto.getTypeId())
+                .orElseThrow(() -> new ResourceNotFoundException(
+                           "Type not found with ID: " + dto.getTypeId()));
 
             //  mapper to update entity fields
             TestCaseMapper.mapDtoToEntity(dto, testCase, subModule, project, severity, type);
