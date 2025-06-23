@@ -1,10 +1,8 @@
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.ReleaseTestCaseDto;
-
-import java.util.List;
+import com.defect.defectTracker.dto.TestCaseResponseDTO;
 
 public interface ReleaseTestCaseService {
-    List<ReleaseTestCaseDto> getTestCasesByReleaseId(String releaseId);
-
+    TestCaseResponseDTO getTestCaseByReleaseTestCaseId(String releaseTestCaseId);
+    void deleteTestCaseByReleaseTestCaseId(String releaseTestCaseId);
 }

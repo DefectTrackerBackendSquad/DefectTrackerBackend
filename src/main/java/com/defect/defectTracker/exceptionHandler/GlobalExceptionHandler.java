@@ -1,5 +1,3 @@
-
-
 package com.defect.defectTracker.exceptionHandler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
