@@ -16,5 +16,5 @@ public class Severity {
     private Long id;
 
     private String severityName;
-    private Color  severityColor;
+    private String  severityColor;
 }
