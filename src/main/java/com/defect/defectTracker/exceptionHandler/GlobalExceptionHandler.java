@@ -1,5 +1,6 @@
 package com.defect.defectTracker.exceptionHandler;
 
+import com.defect.defectTracker.utils.Constants;
 import com.defect.defectTracker.utils.StandardResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok("Data Not Found");
 
     }
+
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<Object> handleResourceNotFoundException(ResourceNotFoundException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
