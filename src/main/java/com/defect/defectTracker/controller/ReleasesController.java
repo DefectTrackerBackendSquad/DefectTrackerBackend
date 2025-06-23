@@ -2,6 +2,7 @@ package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.ReleasesDTO;
 import com.defect.defectTracker.entity.Releases;
+import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.service.ReleasesService;
 import com.defect.defectTracker.utils.StandardResponse;
 import org.slf4j.Logger;
@@ -35,7 +36,6 @@ public class ReleasesController {
             Releases releases = new Releases();
             releases.setReleaseName((String) request.get("releaseName"));
 
-
             Object dateObj = request.get("releaseDate");
             if (dateObj != null) {
                 try {
@@ -55,25 +55,25 @@ public class ReleasesController {
 
             Releases createdRelease = releasesService.createRelease(releases, projectId);
 
-
             return new ResponseEntity<>(
-                    new StandardResponse("success", "Release created successfully",null, 201),
+                    new StandardResponse("success", "Release created successfully", null, 200),
                     HttpStatus.CREATED
             );
 
         } catch (Exception e) {
-            logger.info("Error creating release: {}", e.getMessage());
+            logger.error("Error creating release", e);
             return new ResponseEntity<>(
-                    new StandardResponse("error", "Failed to import", null, 500),
+                    new StandardResponse("error", "Failed to import", null, 400),
                     HttpStatus.INTERNAL_SERVER_ERROR
             );
         }
     }
 
 
+
     @GetMapping("/search")
     public ResponseEntity<StandardResponse> searchReleases(
-            @RequestParam(required = false) String releaseId,  // Added this parameter
+            @RequestParam(required = false) String releaseId,
             @RequestParam(required = false) String releaseName,
             @RequestParam(required = false) String releaseType,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date releaseDate,
@@ -93,18 +93,62 @@ public class ReleasesController {
     }
 
 
+    @GetMapping("/releaseId/{releaseId}")
+    public ResponseEntity<ReleasesDTO.ApiResponse> getReleaseByReleaseId(@PathVariable String releaseId) {
+        try {
+            ReleasesDTO.ReleaseResponse response = releasesService.getReleaseByReleaseId(releaseId);
 
+            ReleasesDTO.ApiResponse successResponse = new ReleasesDTO.ApiResponse(
+                    "success",
+                    "2000",
+                    "Retrieved successfully",
+                    response
+            );
 
+            return ResponseEntity.ok(successResponse);
 
+        } catch (ResourceNotFoundException e) {
+            ReleasesDTO.ApiResponse failResponse = new ReleasesDTO.ApiResponse(
+                    "failure",
+                    "4000",
+                    "Id not found: " + e.getMessage(),
+                    null
+            );
 
+            return ResponseEntity.ok(failResponse);
+        } catch (Exception e) {
+            ReleasesDTO.ApiResponse errorResponse = new ReleasesDTO.ApiResponse(
+                    "failure",
+                    "4000",
+                    "Something went wrong: " + e.getMessage(),
+                    null
+            );
 
+            return ResponseEntity.status(400).body(errorResponse);
+        }
+    }
 
+    @GetMapping("/projectId/{projectId}")
+    public ResponseEntity<StandardResponse> getReleasesByProjectId(@PathVariable String projectId) {
+        try {
+            List<ReleasesDTO> releases = releasesService.getReleasesByProjectId(projectId);
 
-
-
+            return ResponseEntity.ok(
+                    new StandardResponse("success", "Releases for project fetched", releases, 200)
+            );
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new StandardResponse("error", "Project not found: " + e.getMessage(), null, 400)
+            );
+        } catch (Exception e) {
+            logger.error("Error fetching releases by projectId", e);
+            return new ResponseEntity<>(
+                    new StandardResponse("error", "Something went wrong", null, 400),
+                    HttpStatus.INTERNAL_SERVER_ERROR
+            );
+        }
+    }
 
 
 
 }
-
-

@@ -1,5 +1,6 @@
 package com.defect.defectTracker.repository;
 
+import com.defect.defectTracker.entity.Project;
 import com.defect.defectTracker.entity.Releases;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ReleasesRepo extends JpaRepository<Releases, Long> {
 
@@ -23,6 +26,9 @@ public interface ReleasesRepo extends JpaRepository<Releases, Long> {
             @Param("releaseType") String releaseType,
             @Param("releaseDate") Date releaseDate,
             @Param("projectId") Long projectId);
+
+    Optional<Releases> findByReleaseId(String releaseId);
+    List<Releases> findByProject(Project project);
 
 
 }

@@ -17,4 +17,8 @@ public interface ReleasesService {
             Date releaseDate,
             Long projectId
     );
+
+    ReleasesDTO.ReleaseResponse getReleaseByReleaseId(String releaseId);
+    List<ReleasesDTO> getReleasesByProjectId(String projectId);
+
 }
