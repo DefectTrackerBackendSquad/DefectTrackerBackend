@@ -1,79 +1,73 @@
 package com.defect.defectTracker.controller;
 
 import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.service.TestCaseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import com.defect.defectTracker.entity.TestCase;
+import com.defect.defectTracker.response.ApiResponse;
+import com.defect.defectTracker.service.TestCaseService;
+import com.defect.defectTracker.service.TestCaseImportService;
 import com.defect.defectTracker.utils.StandardResponse;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.MediaType;
-import com.defect.defectTracker.service.TestCaseImportService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.IOException;
 import java.util.List;
-import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/testcases")
+@RequestMapping("/api/v1/testcase")
 @CrossOrigin
 @RequiredArgsConstructor
-//@RequestMapping("/api/v1/testcase")
 public class TestCaseController {
 
     @Autowired
-    private TestCaseService service;
     private TestCaseService testCaseService;
     private TestCaseImportService importService;
-/// ///////////
+
+    private static final Logger logger = LoggerFactory.getLogger(TestCaseController.class);
+
     @DeleteMapping("/delete/{testCaseId}")
     public ResponseEntity<?> deleteByTestCaseId(@PathVariable String testCaseId) {
         try {
-            service.deleteByTestCaseId(testCaseId); // Just call service, don't return dto
-
+            testCaseService.deleteByTestCaseId(testCaseId);
             return ResponseEntity.ok(Map.of("message", "Test case deleted successfully."));
-
-        }
-           catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(404).body(Map.of("error", e.getMessage()));
-        }
-        catch (Exception e) {
-            e.printStackTrace(); // Optional: useful during debugging
+        } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(500).body(Map.of("error", "Internal server error. Unable to delete test case."));
         }
     }
-/// ///////
-    Logger logger = LoggerFactory.getLogger(TestCaseController.class);
-    @GetMapping(value= "/module/{moduleId}", produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @GetMapping(value = "/module/{moduleId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<StandardResponse> getTestCasesByModuleId(@PathVariable Long moduleId) {
-        List<TestCase> testCases = testCaseService.getTestCasesByModuleId(moduleId);
+        List<TestCaseDto> testCases = testCaseService.getTestCasesByModuleIdDto(moduleId); // use DTO version
 
-        StandardResponse standardResponse = new StandardResponse("Success", 2000,"Retrived Successfully", null);
-
-        logger.info(standardResponse.getMessage());
         if (testCases == null || testCases.isEmpty()) {
             logger.warn("No test cases found for module ID: {}", moduleId);
-            return ResponseEntity.ok(new StandardResponse("Success",2000, "Retrived Successfully", null));
+            return ResponseEntity.ok(new StandardResponse("Success", 2000, "No data found", null));
         }
 
         logger.info("Fetched {} test cases for module ID: {}", testCases.size(), moduleId);
-        return ResponseEntity.ok(new StandardResponse("Success",2000,"Retrived Successfully", testCases));
+        return ResponseEntity.ok(new StandardResponse("Success", 2000, "Retrieved Successfully", testCases));
     }
+
     @GetMapping("/{subModuleId}")
-    public ResponseEntity<?> getSubModuleId(@PathVariable Long subModuleId) {
-        List<TestCaseDto> testCases = testCaseService.getTestCasesBySubModuleId(subModuleId);
+    public ResponseEntity<?> getSubModuleId(@PathVariable String subModuleId) {
+        List<TestCaseDto> testCases = testCaseService.getTestCasesBySubModuleId(Long.valueOf(subModuleId));
         if (testCases == null || testCases.isEmpty()) {
             return ResponseEntity.badRequest().body(
                     new StandardResponse("failure", 4000, "Data not found", null)
             );
         }
-        return ResponseEntity.ok().body(
-                new StandardResponse("success", 2000, "Retrieved Successfully.!", testCases)
+        return ResponseEntity.ok(
+                new StandardResponse("success", 2000, "Retrieved Successfully!", testCases)
         );
     }
 
@@ -87,8 +81,6 @@ public class TestCaseController {
                     .body("Failed to import: " + e.getMessage());
         }
     }
-
-
 
     @PostMapping
     public ResponseEntity<?> createTestCase(@RequestBody TestCaseDto dto) {
@@ -123,9 +115,17 @@ public class TestCaseController {
                     new StandardResponse("success", 2000, "Saved Successfully.", null)
             );
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new StandardResponse("failure", 4000, "Save Failed", null)
             );
         }
+    }
+
+    @PutMapping("/{testCaseId}")
+    public ResponseEntity<ApiResponse> updateTestCase(
+            @PathVariable String testCaseId,
+            @RequestBody TestCaseDto dto) {
+        return testCaseService.updateTestCase(testCaseId, dto);
     }
 }

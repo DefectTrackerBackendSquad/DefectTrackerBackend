@@ -1,103 +1,89 @@
 package com.defect.defectTracker.service;
 
 import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.entity.TestCase;
-import com.defect.defectTracker.repository.TestCaseRepo;
-import com.defect.defectTracker.service.TestCaseService;
+import com.defect.defectTracker.entity.*;
+import com.defect.defectTracker.exception.ResourceNotFoundException;
+import com.defect.defectTracker.repository.*;
+import com.defect.defectTracker.response.ApiResponse;
+import com.defect.defectTracker.response.ApiResponseCodes;
+import com.defect.defectTracker.utils.TestCaseMapper;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import com.defect.defectTracker.dto.TestCaseDto;
-import com.defect.defectTracker.repository.*;
-import com.defect.defectTracker.entity.TestCase;
-import jakarta.transaction.Transactional;
-import lombok.Data;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
-@Data
 @Service
 @Transactional
 public class TestCaseServiceImpl implements TestCaseService {
-  
-    Logger logger = Logger.getLogger(TestCaseServiceImpl.class.getName());
+
+    private static final Logger logger = Logger.getLogger(TestCaseServiceImpl.class.getName());
+
+    private final TestCaseRepo testCaseRepo;
+    private final SubModuleRepo subModuleRepo;
+    private final ModuleRepo moduleRepo;
+    private final ProjectRepo projectRepo;
+    private final SeverityRepo severityRepo;
+    private final TypeRepo typeRepo;
 
     @Autowired
-    private TestCaseRepo testCaseRepository;
-    @Override
-    public List<TestCase> getTestCasesByModuleId(Long moduleId) {
-        List<TestCase> testCases =  testCaseRepository.findByModules_Id(moduleId);
-        logger.info(String.valueOf(testCases.size()));
-        return testCases;
+    public TestCaseServiceImpl(
+            TestCaseRepo testCaseRepo,
+            SubModuleRepo subModuleRepo,
+            ModuleRepo moduleRepo,
+            ProjectRepo projectRepo,
+            SeverityRepo severityRepo,
+            TypeRepo typeRepo
+    ) {
+        this.testCaseRepo = testCaseRepo;
+        this.subModuleRepo = subModuleRepo;
+        this.moduleRepo = moduleRepo;
+        this.projectRepo = projectRepo;
+        this.severityRepo = severityRepo;
+        this.typeRepo = typeRepo;
     }
-  
-    @Autowired
-    private TestCaseRepo testCaseRepo;
 
+    // ✅ Get test cases by Module ID as DTO list
+    @Override
+    public List<TestCaseDto> getTestCasesByModuleIdDto(Long moduleId) {
+        List<TestCase> testCases = testCaseRepo.findByModules_Id(moduleId);
+        return testCases.stream().map(this::mapToDto).collect(Collectors.toList());
+    }
+
+    // ✅ Get test cases by SubModule ID as DTO list
     @Override
     public List<TestCaseDto> getTestCasesBySubModuleId(Long subModuleId) {
         List<TestCase> testCases = testCaseRepo.findBySubModule_Id(subModuleId);
-        return testCases.stream().map(testCase -> {
-            TestCaseDto dto = new TestCaseDto();
-            dto.setId(testCase.getId());
-            dto.setDescription(testCase.getDescription());
-            dto.setSubModuleId(testCase.getSubModule() != null ? String.valueOf(testCase.getSubModule().getId()) : null);
-            dto.setSeverityId(testCase.getSeverity() != null ? testCase.getSeverity().getId() : null);
-            dto.setSteps(testCase.getSteps());
-            dto.setTypeId(testCase.getType() != null ? testCase.getType().getId() : null);
-            dto.setModuleId(testCase.getModules() != null ? String.valueOf(testCase.getModules().getId()) : null);
-            dto.setProjectId(testCase.getProject() != null ? String.valueOf(testCase.getProject().getId()) : null);
-            dto.setTestCaseId(testCase.getTestCaseId());
-            return dto;
-        }).collect(Collectors.toList());
+        return testCases.stream().map(this::mapToDto).collect(Collectors.toList());
     }
 
-    @Autowired
-    private SubModuleRepo subModuleRepo;
-
-    @Autowired
-    private ModuleRepo moduleRepo;
-
-    @Autowired
-    private ProjectRepo projectRepo;
-
-    @Autowired
-    private SeverityRepo severityRepo;
-
-    @Autowired
-    private TestCaseRepo repository;
-
-
+    // ✅ Delete test case by ID
     @Override
     public TestCaseDto deleteByTestCaseId(String testCaseId) {
-        Optional<TestCase> optional = repository.findByTestCaseId(testCaseId);
-
+        Optional<TestCase> optional = testCaseRepo.findByTestCaseId(testCaseId);
         if (optional.isEmpty()) {
             throw new IllegalArgumentException("Test case with ID " + testCaseId + " not found");
         }
-
-        TestCase testCase = optional.get();
-
-        TestCaseDto dto = new TestCaseDto();
-
-        repository.deleteByTestCaseId(testCaseId); // Deletes without lazy loading issues
-        return dto;
+        testCaseRepo.deleteByTestCaseId(testCaseId);
+        return mapToDto(optional.get());
     }
-    private TypeRepo typeRepo;
 
+    // ✅ Check if test case exists
     @Override
     public boolean testCaseExists(String testCaseId) {
         return testCaseRepo.existsByTestCaseId(testCaseId);
     }
 
+    // ✅ Create new test case
     @Override
     public TestCaseDto createTestCase(TestCaseDto dto) {
         validateTestCaseDto(dto);
+
         TestCase testCase = new TestCase();
         testCase.setTestCaseId(dto.getTestCaseId());
         testCase.setDescription(dto.getDescription());
@@ -119,12 +105,57 @@ public class TestCaseServiceImpl implements TestCaseService {
             testCase.setType(typeRepo.findById(dto.getTypeId()).orElse(null));
         }
 
-        TestCase saved = testCaseRepo.save(testCase);
-        return mapToDto(saved);
+        return mapToDto(testCaseRepo.save(testCase));
     }
 
+    // ✅ Update test case
+    @Override
+    public ResponseEntity<ApiResponse> updateTestCase(String testCaseId, TestCaseDto dto) {
+        try {
+            TestCase testCase = testCaseRepo.findByTestCaseId(testCaseId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Test case not found with ID: " + testCaseId));
+
+            SubModule subModule = subModuleRepo.findBySubModuleId(dto.getSubModuleId())
+                    .orElseThrow(() -> new ResourceNotFoundException("SubModule not found with ID: " + dto.getSubModuleId()));
+
+            Project project = projectRepo.findByProjectId(dto.getProjectId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + dto.getProjectId()));
+
+            Severity severity = severityRepo.findById(dto.getSeverityId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Severity not found with ID: " + dto.getSeverityId()));
+
+            Type type = typeRepo.findById(dto.getTypeId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Type not found with ID: " + dto.getTypeId()));
+
+            TestCaseMapper.mapDtoToEntity(dto, testCase, subModule, project, severity, type);
+
+            testCaseRepo.save(testCase);
+
+            return ResponseEntity.ok(new ApiResponse("Success", ApiResponseCodes.SUCCESS_UPDATE, ApiResponseCodes.MSG_UPDATE_SUCCESS));
+
+        } catch (ResourceNotFoundException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failure", ApiResponseCodes.ERROR_DATA_NOT_FOUND, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse("Failure", ApiResponseCodes.ERROR_UPDATE_FAILED, ApiResponseCodes.MSG_UPDATE_FAILED));
+        }
+    }
+
+    // ✅ Validation
+    private void validateTestCaseDto(TestCaseDto dto) {
+        if (dto.getModuleId() == null || !dto.getModuleId().matches("^MO\\d{4}$")) {
+            throw new IllegalArgumentException("moduleId must be in format MO0001");
+        }
+        if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$")) {
+            throw new IllegalArgumentException("projectId must be in format PR0001");
+        }
+    }
+
+    // ✅ Mapping entity to DTO
     private TestCaseDto mapToDto(TestCase testCase) {
         TestCaseDto dto = new TestCaseDto();
+        dto.setId(testCase.getId());
         dto.setTestCaseId(testCase.getTestCaseId());
         dto.setDescription(testCase.getDescription());
         dto.setSteps(testCase.getSteps());
@@ -135,24 +166,4 @@ public class TestCaseServiceImpl implements TestCaseService {
         dto.setTypeId(testCase.getType() != null ? testCase.getType().getId() : null);
         return dto;
     }
-
-    private void validateTestCaseDto(TestCaseDto dto) {
-//        // description: string only, max 255
-//        if (dto.getDescription() == null || dto.getDescription().length() > 255 || !dto.getDescription().matches("^[\\p{L}0-9 .,'\"!?-]*$")) {
-//            throw new IllegalArgumentException("Description must be a string with max 255 characters.");
-//        }
-//
-//        // steps: string only, max 255
-//        if (dto.getSteps() == null || dto.getSteps().length() > 255 || !dto.getSteps().matches("^[\\p{L}0-9 .,'\"!?-]*$")) {
-//            throw new IllegalArgumentException("Steps must be a string with max 255 characters.");
-//        }
-        // moduleId: must match MO + 4 digits, max 6
-        if (dto.getModuleId() == null || !dto.getModuleId().matches("^MO\\d{4}$") || dto.getModuleId().length() != 6) {
-            throw new IllegalArgumentException("moduleId must be in format MO0001 and 6 characters.");
-        }
-        // projectId: must match PR + 4 digits, max 6
-        if (dto.getProjectId() == null || !dto.getProjectId().matches("^PR\\d{4}$") || dto.getProjectId().length() != 6) {
-            throw new IllegalArgumentException("projectId must be in format PR0001 and 6 characters.");
-        }
-}
 }
