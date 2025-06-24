@@ -20,7 +20,11 @@ public class ReleaseTestCaseController {
     private ReleaseTestCaseService releaseTestCaseService;
 
 
-    @PostMapping
+    
+
+    
+
+@PostMapping
     public ResponseEntity<StandardResponse> createReleaseTestCase(@RequestBody ReleaseTestCaseDto dto) {
         try {
             ReleaseTestCase created = releaseTestCaseService.createReleaseTestCase(dto);
@@ -30,18 +34,6 @@ public class ReleaseTestCaseController {
                     .body(new StandardResponse("failure", "Error creating release test case", null, 5000));
         }
     }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<StandardResponse> updateReleaseTestCase(@PathVariable Long id, @RequestBody ReleaseTestCaseDto dto) {
-        try {
-            releaseTestCaseService.updateReleaseTestCase(id, dto);
-            return ResponseEntity.ok(new StandardResponse("success", "Updated Successfully", null, 2000));
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body(new StandardResponse("failure", "Error updating release test case", null, 5000));
-        }
-    }
-}
 
     @GetMapping("/{releaseTestCaseId}")
     public StandardResponse getTestCase(@PathVariable String releaseTestCaseId) {
@@ -66,6 +58,17 @@ public class ReleaseTestCaseController {
             return new StandardResponse("failure", "Unexpected error occurred", null, 5000);
         }
     }
+    @PutMapping("/{id}")
+    public ResponseEntity<StandardResponse> updateReleaseTestCase(@PathVariable Long id, @RequestBody ReleaseTestCaseDto dto) {
+        try {
+            releaseTestCaseService.updateReleaseTestCase(id, dto);
+            return ResponseEntity.ok(new StandardResponse("success", "Updated Successfully", null, 2000));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError()
+                    .body(new StandardResponse("failure", "Error updating release test case", null, 5000));
+        }
+    }
+}
 //Updated
 }
 
