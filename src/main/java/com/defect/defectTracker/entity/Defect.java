@@ -20,6 +20,7 @@ public class Defect {
     private String attachment;
     private String steps;
 
+    private String testcaseId;
 
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
@@ -53,6 +54,9 @@ public class Defect {
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "type_id")
     private Type defectType;
+
+    @Column(name = "created_date")
+    private LocalDateTime createdDate;
 
 
 }

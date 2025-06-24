@@ -2,114 +2,121 @@ package com.defect.defectTracker.service;
 
 import com.defect.defectTracker.dto.DefectDto;
 import com.defect.defectTracker.entity.Defect;
-import com.defect.defectTracker.exceptionHandler.GlobalExceptionHandler;
 import com.defect.defectTracker.repository.DefectRepo;
-import com.defect.defectTracker.service.DefectService;
 import com.defect.defectTracker.utils.StandardResponse;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.converter.HttpMessageNotWritableException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
-import org.springframework.data.repository.query.Param;
-import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
- // Lombok generates constructor
 @Service
 @RequiredArgsConstructor
 public class DefectServiceImpl implements DefectService {
-    Logger logger = LoggerFactory.getLogger(DefectServiceImpl.class);
 
-    @Autowired
-    private DefectRepo defectRepository;
+    private final Logger logger = LoggerFactory.getLogger(DefectServiceImpl.class);
+    private final DefectRepo defectRepo;
 
     @Override
     public StandardResponse getDefectsByFlexibleFilters(Long statusId, Long severityId, Long priorityId, Long typeId, Long projectId) {
-        List<Defect> defects = defectRepository.findWithAllFilters(statusId, severityId, priorityId, typeId, projectId);
+        List<Defect> defects = defectRepo.findWithAllFilters(statusId, severityId, priorityId, typeId, projectId);
         return buildResponse(defects);
     }
 
+    @Override
+    public Defect getDefectByDefectId(String defectId) {
+        logger.info("Fetching defect with ID: {}", defectId);
+        Defect defect = defectRepo.findByDefectId(defectId);
+        if (defect == null) {
+            logger.warn("Defect with ID {} not found", defectId);
+            throw new HttpMessageNotWritableException("Defect not found");
+        }
+        return defect;
+    }
+
+    @Override
+    public List<Defect> getDefectsByAssignee(Long userId) {
+        return defectRepo.findByAssignedById(userId);
+    }
+
+    @Override
+    public DefectDto getDefectByTestcaseId(String testcaseId) {
+        Optional<Defect> optionalDefect = defectRepo.findByTestcaseId(testcaseId);
+        Defect defect = optionalDefect.orElseThrow(() -> {
+            logger.warn("Test case ID {} not found", testcaseId);
+            return new HttpMessageNotWritableException("Test Case not found");
+        });
+
+        return convertToDefectDto(defect);
+    }
+
+    @Override
+    public Defect updateDefect(Defect defect) {
+        return defectRepo.save(defect);
+    }
+
     private StandardResponse buildResponse(List<Defect> defects) {
-        Logger logger = LoggerFactory.getLogger(DefectServiceImpl.class);
         List<DefectDto> defectDTOs = defects.stream().map(this::convertToDefectDto).toList();
-        StandardResponse response = new StandardResponse();
-        response.setStatus("success");
-        response.setStatusCode(2000);
-        response.setMessage("retrieved successfully");
-        response.setData(Map.of("defects", defectDTOs));
+        StandardResponse response = StandardResponse.builder()
+                .status("success")
+                .statusCode(2000)
+                .message("retrieved successfully")
+                .data(Map.of("defects", defectDTOs))
+                .build();
         logger.info("Retrieved {} defects", defectDTOs.size());
         return response;
     }
 
     private DefectDto convertToDefectDto(Defect defect) {
         DefectDto dto = new DefectDto();
-        dto.setId(defect.getId());
+        dto.setId(defect.getDefectId());
         dto.setTitle(defect.getDescription());
         dto.setDescription(defect.getDescription());
-        dto.setStatus(defect.getDefectStatus() != null ? defect.getDefectStatus().getDefectStatusName() : null);
-        dto.setSeverityId(defect.getSeverity() != null ? defect.getSeverity().getId() : null);
-        dto.setSeverity(defect.getSeverity() != null ? defect.getSeverity() : null);
         dto.setCreatedDate(defect.getCreatedDate());
-        dto.setProjectId(defect.getProject() != null ? (defect.getProject().getId()) : null);
-        dto.setAssignedToId(defect.getAssignedTo() != null ? defect.getAssignedTo().getId() : null);
-        dto.setAssignedById(defect.getAssignedBy() != null ? defect.getAssignedBy().getId() : null);
-        dto.setDefectStatusId(defect.getDefectStatus() != null ? defect.getDefectStatus().getId() : null);
-        dto.setPriorityId(defect.getPriority() != null ? defect.getPriority().getId() : null);
-        dto.setTypeId(defect.getDefectType() != null ? defect.getDefectType().getId() : null);
+
+        if (defect.getDefectStatus() != null) {
+            dto.setStatus(defect.getDefectStatus().getDefectStatusName());
+            dto.setDefectStatusId(defect.getDefectStatus().getId());
+        }
+
+        if (defect.getSeverity() != null) {
+            dto.setSeverity(defect.getSeverity().getSeverityName());
+            dto.setSeverityId(defect.getSeverity().getId());
+        }
+
+        if (defect.getPriority() != null) {
+            dto.setPriorityId(defect.getPriority().getId());
+        }
+
+        if (defect.getDefectType() != null) {
+            dto.setTypeId(defect.getDefectType().getId());
+        }
+
+        if (defect.getProject() != null) {
+            dto.setProjectId(defect.getProject().getId());
+        }
+
+        if (defect.getAssignedTo() != null) {
+            dto.setAssignedToId(defect.getAssignedTo().getId());
+        }
+
+        if (defect.getAssignedBy() != null) {
+            dto.setAssignedById(defect.getAssignedBy().getId());
+        }
+
         dto.setReOpenCount(defect.getReOpenCount());
         dto.setSteps(defect.getSteps());
-        dto.setReleaseTestCaseId(defect.getReleaseTestCase() != null ? defect.getReleaseTestCase().getId() : null);
-        return dto;
-    }
-    @Autowired
-    private DefectRepo defectRepo;
 
-    private final DefectRepo defectRepo;
-
-    @Override
-    public DefectDto getDefectByTestcaseId(String testcaseId) {
-        Defect defect = defectRepo.findByTestcaseId(testcaseId)
-                .orElseThrow(() -> new GlobalExceptionHandler("Test Case not found"));
-
-        DefectDto dto = new DefectDto();
-        dto.setId(defect.getDefectId());
-        dto.setDefectTitle(defect.getDescription());
-        dto.setDescriptions(defect.getDescription());
-        dto.setTestcaseId(defect.getReleaseTestCase().getTestcaseId());
-        dto.setSeverity(defect.getSeverity().getSeverityName());
-        dto.setDefectStatus(defect.getDefectStatus().getDefectStatusName());
+        if (defect.getReleaseTestCase() != null) {
+            dto.setReleaseTestCaseId(defect.getReleaseTestCase().getId());
+            dto.setTestcaseId(defect.getReleaseTestCase().getReleaseTestCaseId());
+        }
 
         return dto;
     }
 }
-
-     @Override
-     public List<Defect> getDefectsByAssignee(Long userId) {
-         return defectRepo.findByAssignedById(userId);
-     }
-
-
-     @Override
-     public Defect getDefectByDefectId(String id) {
-         DefectDto defectDto = new DefectDto();
-         Defect defect = defectRepo.findByDefectId(id);
-         logger.info("Fetching defect with ID: {}", id);
-         if (defect != null) {
-             //logger.info("Defect found: {}", defect.get().getDefectId());
-             //BeanUtils.copyProperties(defectDto, defect.get());
-             return defect;
-         } else {
-             return null;
-         }
-     }
-
-     @Override
-     public Defect updateDefect(Defect defect) {
-         return defectRepo.save(defect);
-     }
- }
