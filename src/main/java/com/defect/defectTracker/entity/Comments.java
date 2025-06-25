@@ -3,8 +3,6 @@ package com.defect.defectTracker.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.print.attribute.standard.Media;
-
 @Data
 @Entity
 public class Comments {

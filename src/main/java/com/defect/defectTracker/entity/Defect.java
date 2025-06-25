@@ -3,10 +3,6 @@ package com.defect.defectTracker.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.print.attribute.standard.Media;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Data
 @Entity
 public class Defect {

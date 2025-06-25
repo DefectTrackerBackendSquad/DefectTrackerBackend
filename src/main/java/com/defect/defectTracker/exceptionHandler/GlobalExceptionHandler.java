@@ -1,6 +1,5 @@
 package com.defect.defectTracker.exceptionHandler;
 import com.defect.defectTracker.response.*;
-import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

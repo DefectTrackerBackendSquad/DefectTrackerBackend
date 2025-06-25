@@ -1,6 +1,6 @@
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.ReleasesDTO;
+import com.defect.defectTracker.dto.ReleaseDTO;
 import com.defect.defectTracker.entity.Project;
 import com.defect.defectTracker.entity.Releases;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
@@ -30,8 +30,8 @@ public class ReleasesServiceImpl implements ReleasesService {
     private ProjectRepo projectRepository;
 
     @Override
-    public List<ReleasesDTO> searchReleases(String releaseId, String releaseName, String releaseType,
-                                            Date releaseDate, Long projectId) {
+    public List<ReleaseDTO> searchReleases(String releaseId, String releaseName, String releaseType,
+                                           Date releaseDate, Long projectId) {
         logger.info("Searching releases with filters - releaseId: {}, releaseName: {}, releaseType: {}, releaseDate: {}, projectId: {}",
                 releaseId, releaseName, releaseType, releaseDate, projectId);
 
@@ -43,8 +43,8 @@ public class ReleasesServiceImpl implements ReleasesService {
                 .collect(Collectors.toList());
     }
 
-    private ReleasesDTO convertToDto(Releases release) {
-        ReleasesDTO dto = new ReleasesDTO();
+    private ReleaseDTO convertToDto(Releases release) {
+        ReleaseDTO dto = new ReleaseDTO();
         dto.setId(release.getId());
         dto.setReleaseId(release.getReleaseId());
         dto.setReleaseName(release.getReleaseName());
@@ -91,14 +91,14 @@ public class ReleasesServiceImpl implements ReleasesService {
     }
 
     @Override
-    public ReleasesDTO.ReleaseResponse getReleaseByReleaseId(String releaseId) {
+    public ReleaseDTO.ReleaseResponse getReleaseByReleaseId(String releaseId) {
         Releases release = releaseRepository.findByReleaseId(releaseId)
                 .orElseThrow(() -> new ResourceNotFoundException("Release not found with id: " + releaseId));
 
         return mapToReleaseResponse(release);
     }
 
-    private ReleasesDTO.ReleaseResponse mapToReleaseResponse(Releases release) {
+    private ReleaseDTO.ReleaseResponse mapToReleaseResponse(Releases release) {
         String formattedDate = null;
         if (release.getReleaseDate() != null) {
             formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(release.getReleaseDate());
@@ -106,7 +106,7 @@ public class ReleasesServiceImpl implements ReleasesService {
 
         Long projectId = release.getProject() != null ? release.getProject().getId() : null;
 
-        return new ReleasesDTO.ReleaseResponse(
+        return new ReleaseDTO.ReleaseResponse(
                 release.getReleaseId(),
                 release.getReleaseName(),
                 projectId,
@@ -116,14 +116,14 @@ public class ReleasesServiceImpl implements ReleasesService {
     }
 
     @Override
-    public List<ReleasesDTO> getReleasesByProjectId(String projectId) {
+    public List<ReleaseDTO> getReleasesByProjectId(String projectId) {
         Project project = projectRepository.findByProjectId(projectId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with ID: " + projectId));
 
         List<Releases> releasesList = releaseRepository.findByProject(project);
 
         return releasesList.stream()
-                .map(ReleasesDTO::fromEntity)
+                .map(ReleaseDTO::fromEntity)
                 .collect(Collectors.toList());
     }
 

@@ -3,14 +3,19 @@ package com.defect.defectTracker.service;
 import com.defect.defectTracker.entity.DefectStatus;
 import com.defect.defectTracker.repository.DefectStatusRepo;
 import com.defect.defectTracker.dto.DefectStatusDto;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.defect.defectTracker.utils.StandardResponse;
+import com.defect.defectTracker.util.StandardResponse;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 public  class DefectStatusServiceImpl implements DefectStatusService {
+
+    Logger logger = LoggerFactory.getLogger(DefectStatusServiceImpl.class);
 
     @Autowired
     private DefectStatusRepo defectStatusRepo;
@@ -59,6 +64,25 @@ public  class DefectStatusServiceImpl implements DefectStatusService {
         } else {
             return new StandardResponse("failure", "Id not exist.", null, 10009);
         }
+    }
+
+    @Override
+    public DefectStatusDto createDefectStatus(DefectStatusDto defectStatusDto) {
+        DefectStatus defectStatus = new DefectStatus();
+        defectStatus.setDefectStatusName(defectStatusDto.getDefectStatusName());
+        defectStatusRepo.save(defectStatus);
+        return defectStatusDto;
+    }
+
+    @Override
+    public List<DefectStatusDto> getDefectStatuses(){
+        List<DefectStatus> defectStatuses = defectStatusRepo.findAll();
+        List<DefectStatusDto> defectStatusDtos = defectStatuses.stream()
+                .map(ds -> new DefectStatusDto(ds.getId(), ds.getDefectStatusName()))
+                .toList();
+        logger.info(String.valueOf(defectStatuses.size()));
+        logger.info(String.valueOf(defectStatusDtos.size()));
+        return defectStatusDtos;
     }
 }
 

@@ -12,7 +12,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ReleasesDTO {
+public class ReleaseDTO {
 
     private Long id;
     private String releaseId;
@@ -22,8 +22,8 @@ public class ReleasesDTO {
     private Long projectId;
 
     // Static method to convert Entity → DTO
-    public static ReleasesDTO fromEntity(com.defect.defectTracker.entity.Releases entity) {
-        ReleasesDTO dto = new ReleasesDTO();
+    public static ReleaseDTO fromEntity(com.defect.defectTracker.entity.Releases entity) {
+        ReleaseDTO dto = new ReleaseDTO();
         dto.setId(entity.getId());
         dto.setReleaseId(entity.getReleaseId());
         dto.setReleaseName(entity.getReleaseName());
@@ -37,7 +37,7 @@ public class ReleasesDTO {
     }
 
     // Static method to convert DTO → Response (formatted)
-    public static ReleaseResponse toResponse(ReleasesDTO dto) {
+    public static ReleaseResponse toResponse(ReleaseDTO dto) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         return new ReleaseResponse(
                 dto.getReleaseId(),

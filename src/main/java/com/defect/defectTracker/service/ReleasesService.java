@@ -1,6 +1,6 @@
 package com.defect.defectTracker.service;
 
-import com.defect.defectTracker.dto.ReleasesDTO;
+import com.defect.defectTracker.dto.ReleaseDTO;
 import com.defect.defectTracker.entity.Releases;
 
 import java.util.Date;
@@ -10,7 +10,7 @@ public interface ReleasesService {
     Releases createRelease(Releases releases, String projectId);
 
     // Only declare the method signature (no implementation)
-    List<ReleasesDTO> searchReleases(
+    List<ReleaseDTO> searchReleases(
             String releaseId,
             String releaseName,
             String releaseType,
@@ -18,7 +18,7 @@ public interface ReleasesService {
             Long projectId
     );
 
-    ReleasesDTO.ReleaseResponse getReleaseByReleaseId(String releaseId);
-    List<ReleasesDTO> getReleasesByProjectId(String projectId);
+    ReleaseDTO.ReleaseResponse getReleaseByReleaseId(String releaseId);
+    List<ReleaseDTO> getReleasesByProjectId(String projectId);
 
 }

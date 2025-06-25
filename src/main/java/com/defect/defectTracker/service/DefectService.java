@@ -2,15 +2,17 @@ package com.defect.defectTracker.service;
 
 
 import com.defect.defectTracker.dto.DefectDto;
-import com.defect.defectTracker.utils.StandardResponse;
+import com.defect.defectTracker.dto.DefectFilterResponseDTO;
 import com.defect.defectTracker.entity.Defect;
 
 import java.util.List;
 
 public interface DefectService {
-    StandardResponse getDefectsByFlexibleFilters(Long statusId, Long severityId, Long priorityId, Long typeId, Long projectId);
     Defect updateDefect(Defect defect);
     List<Defect> getDefectsByAssignee(Long userId);
     Defect getDefectByDefectId(String id);
-    StandardResponse buildResponse(List<Defect> defects);
+    void createDefect(DefectDto dto);
+    List<DefectFilterResponseDTO> filterDefects(String projectId, Long statusId, Long priorityId, Long severityId, Long typeId);
 }
+
+

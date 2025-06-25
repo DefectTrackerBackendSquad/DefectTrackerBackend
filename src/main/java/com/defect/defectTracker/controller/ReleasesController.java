@@ -1,10 +1,10 @@
 package com.defect.defectTracker.controller;
 
-import com.defect.defectTracker.dto.ReleasesDTO;
+import com.defect.defectTracker.dto.ReleaseDTO;
 import com.defect.defectTracker.entity.Releases;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.service.ReleasesService;
-import com.defect.defectTracker.utils.StandardResponse;
+import com.defect.defectTracker.util.StandardResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/api/v1/releases")
 public class ReleasesController {
 
-    Logger logger = LoggerFactory.getLogger("ReleaseController.class");
+    Logger logger = LoggerFactory.getLogger(ReleasesController.class);
 
     @Autowired
     private ReleasesService releasesService;
@@ -92,7 +92,7 @@ public class ReleasesController {
                 );
             }
 
-            List<ReleasesDTO> results = releasesService.searchReleases(
+            List<ReleaseDTO> results = releasesService.searchReleases(
                     releaseId,
                     releaseName,
                     releaseType,
@@ -119,11 +119,11 @@ public class ReleasesController {
     }
 
     @GetMapping("/releaseId/{releaseId}")
-    public ResponseEntity<ReleasesDTO.ApiResponse> getReleaseByReleaseId(@PathVariable String releaseId) {
+    public ResponseEntity<ReleaseDTO.ApiResponse> getReleaseByReleaseId(@PathVariable String releaseId) {
         try {
-            ReleasesDTO.ReleaseResponse response = releasesService.getReleaseByReleaseId(releaseId);
+            ReleaseDTO.ReleaseResponse response = releasesService.getReleaseByReleaseId(releaseId);
 
-            ReleasesDTO.ApiResponse successResponse = new ReleasesDTO.ApiResponse(
+            ReleaseDTO.ApiResponse successResponse = new ReleaseDTO.ApiResponse(
                     "success",
                     "2000",
                     "Retrieved successfully",
@@ -133,7 +133,7 @@ public class ReleasesController {
             return ResponseEntity.ok(successResponse);
 
         } catch (ResourceNotFoundException e) {
-            ReleasesDTO.ApiResponse failResponse = new ReleasesDTO.ApiResponse(
+            ReleaseDTO.ApiResponse failResponse = new ReleaseDTO.ApiResponse(
                     "failure",
                     "4000",
                     "Id not found: " + e.getMessage(),
@@ -142,7 +142,7 @@ public class ReleasesController {
 
             return ResponseEntity.ok(failResponse);
         } catch (Exception e) {
-            ReleasesDTO.ApiResponse errorResponse = new ReleasesDTO.ApiResponse(
+            ReleaseDTO.ApiResponse errorResponse = new ReleaseDTO.ApiResponse(
                     "failure",
                     "4000",
                     "Something went wrong: " + e.getMessage(),
@@ -156,7 +156,7 @@ public class ReleasesController {
     @GetMapping("/projectId/{projectId}")
     public ResponseEntity<StandardResponse> getReleasesByProjectId(@PathVariable String projectId) {
         try {
-            List<ReleasesDTO> releases = releasesService.getReleasesByProjectId(projectId);
+            List<ReleaseDTO> releases = releasesService.getReleasesByProjectId(projectId);
 
             return ResponseEntity.ok(
                     new StandardResponse("success", "Releases for project fetched", releases, 200)

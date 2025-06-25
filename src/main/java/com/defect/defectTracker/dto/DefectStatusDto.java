@@ -16,6 +16,4 @@ public class DefectStatusDto {
     @NotBlank(message = "defectStatus cannot be empty")
     private String defectStatusName;
 
-//    public DefectStatusDto(Long id, String defectStatusName) {
-//    }
 }
