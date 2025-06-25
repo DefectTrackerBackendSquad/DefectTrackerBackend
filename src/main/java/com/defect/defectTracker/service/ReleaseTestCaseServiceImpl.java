@@ -1,10 +1,12 @@
 package com.defect.defectTracker.service;
 
+import com.defect.defectTracker.dto.ReleaseTestCaseDto;
 import com.defect.defectTracker.dto.TestCaseResponseDTO;
 import com.defect.defectTracker.entity.ReleaseTestCase;
 import com.defect.defectTracker.exceptionHandler.ResourceNotFoundException;
 import com.defect.defectTracker.repository.ReleaseTestCaseRepo;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,5 +47,12 @@ public class ReleaseTestCaseServiceImpl implements ReleaseTestCaseService {
             throw new ResourceNotFoundException("ReleaseTestCase with ID " + releaseTestCaseId + " not found");
         }
         releaseTestCaseRepo.deleteByReleaseTestCaseId(releaseTestCaseId);
+    }
+
+    @Override
+    public ReleaseTestCase allocateTestCaseRelease(ReleaseTestCaseDto releaseTestCaseDto){
+        ReleaseTestCase releaseTestCase = new ReleaseTestCase();
+        BeanUtils.copyProperties(releaseTestCaseDto,releaseTestCase);
+        return releaseTestCaseRepo.save(releaseTestCase);
     }
 }

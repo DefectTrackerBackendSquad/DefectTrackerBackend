@@ -1,4 +1,4 @@
-package com.defect.defectTracker.utils;
+package com.defect.defectTracker.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
